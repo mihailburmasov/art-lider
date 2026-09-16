@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { services } from '../data/services';
+import { withBase } from '../lib/url';
+---
+
+<BaseLayout
+  title="Страница не найдена — 404"
+  description="Страница не найдена."
+  path="/404/"
+  noindex
+>
+  <section>
+    <div class="container not-found">
+      <span class="eyebrow">404</span>
+      <h1>Страница не найдена</h1>
+      <p class="lead" style="max-width:480px;">Возможно, страница была перемещена или удалена. Воспользуйтесь навигацией ниже.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
+        <a class="btn btn-primary" href={withBase('/')}>На главную</a>
+        <a class="btn btn-ghost" href={withBase('/raboty/')}>Наши работы</a>
+        <a class="btn btn-ghost" href={withBase('/kontakty/')}>Контакты</a>
+      </div>
+      <div class="tag-list" style="justify-content:center;margin-top:20px;">
+        {services.slice(0, 6).map((s) => <a href={withBase(`/uslugi/${s.slug}/`)} class="tag">{s.shortTitle}</a>)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

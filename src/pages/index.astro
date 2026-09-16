@@ -1,0 +1,212 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../config/site';
+import { services } from '../data/services';
+import { reviews } from '../data/reviews';
+import { faq } from '../data/faq';
+import { withBase } from '../lib/url';
+
+const allProjects = await getCollection('projects');
+const featured = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 6);
+
+const heroProject = allProjects
+  .filter((p) => p.data.beforeAfter?.length)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
+
+const heroCover = allProjects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0]?.data.cover;
+
+const advantages = [
+  { icon: 'home', title: 'Свой офис в Лысьве', text: 'Приходите на консультацию очно — ул. Федосеева, 37.' },
+  { icon: 'document', title: 'Договор и смета', text: 'Фиксируем объём работ, сроки и стоимость до начала ремонта.' },
+  { icon: 'clock', title: 'Соблюдение сроков', text: 'Работаем по согласованному графику, отчитываемся о ходе работ.' },
+  { icon: 'shield', title: 'Гарантия на работы', text: 'Гарантийные обязательства закрепляем в договоре.' },
+  { icon: 'check', title: 'Работы «под ключ»', text: 'От черновой отделки до финальной уборки — без лишних подрядчиков.' },
+  { icon: 'star', title: 'Свои бригады', text: 'Электрики, сантехники, отделочники — в штате компании.' },
+];
+
+const steps = [
+  { title: 'Заявка', text: 'Оставляете заявку на сайте, звоните или пишете в мессенджер.' },
+  { title: 'Замер', text: 'Выезжаем на объект, обсуждаем объём работ и материалы.' },
+  { title: 'Смета', text: 'Готовим смету и согласовываем сроки.' },
+  { title: 'Договор', text: 'Заключаем договор с фиксированными условиями.' },
+  { title: 'Ремонт', text: 'Выполняем работы по графику, на связи всё время.' },
+  { title: 'Сдача объекта', text: 'Принимаете результат, получаете гарантию.' },
+];
+---
+
+<BaseLayout
+  title={`Ремонт квартир и офисов в ${site.address.city} и Чусовом`}
+  description={`Ремонт квартир и офисов в Лысьве и Чусовом «под ключ»: электрика, натяжные потолки, сантехника, отделка. Договор, смета, гарантия. Звоните: ${site.phone.display}.`}
+  path="/"
+>
+  <section class="hero">
+    <div class="hero__bg">
+      {heroCover && <Image src={heroCover} alt="Выполненный ремонт компании Арт Лидер" width={1600} loading="eager" fetchpriority="high" />}
+    </div>
+    <div class="hero__overlay"></div>
+    <div class="container">
+      <div class="hero__content">
+        <span class="eyebrow hero__eyebrow">Арт Лидер · Лысьва и Чусовой</span>
+        <h1>Ремонт квартир и офисов в Лысьве и Чусовом</h1>
+        <p class="lead">Электрика, натяжные потолки, сантехника, отделка «под ключ». Работаем по договору с фиксированной сметой и гарантией.</p>
+        <div class="hero__cta">
+          <button type="button" class="btn btn-accent" data-open-callback-modal>Рассчитать стоимость</button>
+          <a class="btn btn-outline" href={site.phone.href}>
+            <Icon name="phone" style="width:18px;height:18px" /> Позвонить
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="advantages-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Почему выбирают нас</span>
+        <h2 id="advantages-title">Ремонт без лишних забот</h2>
+      </div>
+      <div class="grid grid-3">
+        {advantages.map((a) => (
+          <div class="card advantage-card">
+            <div class="advantage-card__icon"><Icon name={a.icon} style="width:24px;height:24px" /></div>
+            <h3>{a.title}</h3>
+            <p>{a.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Что мы делаем</span>
+        <h2 id="services-title">Услуги</h2>
+        <p class="lead">Выполняем полный цикл ремонтных работ — от электрики и сантехники до финишной отделки.</p>
+      </div>
+      <div class="grid grid-4">
+        {services.map((s) => <ServiceCard service={s} />)}
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="works-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Портфолио</span>
+        <h2 id="works-title">Выполненные работы</h2>
+        <p class="lead">Реальные объекты в Лысьве и Чусовом — с фото и слайдерами «до/после».</p>
+      </div>
+      <div class="grid grid-3">
+        {featured.map((p) => <ProjectCard project={p} />)}
+      </div>
+      <div style="text-align:center;margin-top:32px;">
+        <a href={withBase('/raboty/')} class="btn btn-ghost">Смотреть все работы</a>
+      </div>
+    </div>
+  </section>
+
+  {heroProject?.data.beforeAfter?.[0] && (
+    <section class="section-alt" aria-labelledby="before-after-title">
+      <div class="container">
+        <div class="two-col">
+          <div>
+            <span class="eyebrow">До и после</span>
+            <h2 id="before-after-title">Смотрите результат своими глазами</h2>
+            <p class="lead">Передвиньте ползунок, чтобы сравнить помещение до начала работ и после сдачи объекта.</p>
+            <a href={withBase(`/raboty/${heroProject.id}/`)} class="btn btn-ghost">Смотреть объект «{heroProject.data.title}»</a>
+          </div>
+          <BeforeAfter
+            before={heroProject.data.beforeAfter[0].before}
+            after={heroProject.data.beforeAfter[0].after}
+            caption={heroProject.data.beforeAfter[0].caption}
+          />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section aria-labelledby="steps-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Как мы работаем</span>
+        <h2 id="steps-title">От заявки до сдачи объекта</h2>
+      </div>
+      <div class="steps">
+        {steps.map((s) => (
+          <div class="step">
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt" aria-labelledby="reviews-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Отзывы</span>
+        <h2 id="reviews-title">Что говорят клиенты</h2>
+      </div>
+      <div class="grid grid-3">
+        {reviews.map((r) => (
+          <div class="card review-card">
+            <span class="review-card__stars" aria-hidden="true">{'★'.repeat(r.rating)}</span>
+            <p>{r.text}</p>
+            <div>
+              <span class="review-card__name">{r.name}</span>
+              <div class="review-card__city">{r.city}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style="text-align:center;margin-top:32px;">
+        <a href={withBase('/otzyvy/')} class="btn btn-ghost">Все отзывы в ВКонтакте</a>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="faq-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Вопросы и ответы</span>
+        <h2 id="faq-title">Часто задаваемые вопросы</h2>
+      </div>
+      <div style="max-width:760px;margin-inline:auto;">
+        <FAQ items={faq} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark" id="request" aria-labelledby="request-title">
+    <div class="container">
+      <div class="two-col">
+        <div>
+          <span class="eyebrow" style="color:var(--color-accent)">Свяжитесь с нами</span>
+          <h2 id="request-title">Оставьте заявку на расчёт стоимости</h2>
+          <p class="lead" style="color:rgba(255,255,255,0.8)">Перезвоним в рабочее время и предложим решение под ваш бюджет.</p>
+          <ul style="display:grid;gap:10px;margin-top:24px;">
+            <li><a href={site.phone.href} style="font-family:var(--font-heading);font-size:1.3rem;">{site.phone.display}</a></li>
+            <li>{site.address.full}</li>
+            <li>{site.workingHours.text}</li>
+          </ul>
+        </div>
+        <div class="card">
+          <ContactForm id="home-contact-form" />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

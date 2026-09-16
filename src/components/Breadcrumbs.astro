@@ -1,0 +1,33 @@
+---
+import JsonLd from './JsonLd.astro';
+import { breadcrumbJsonLd } from '../lib/jsonld';
+import { withBase } from '../lib/url';
+
+interface Crumb {
+  name: string;
+  path: string;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+const allItems = [{ name: 'Главная', path: '/' }, ...items];
+---
+
+<nav class="breadcrumbs container" aria-label="Хлебные крошки">
+  <ol>
+    {allItems.map((item, i) => (
+      <li>
+        {i === allItems.length - 1 ? (
+          <span aria-current="page">{item.name}</span>
+        ) : (
+          <a href={withBase(item.path)}>{item.name}</a>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<JsonLd data={breadcrumbJsonLd(allItems)} />

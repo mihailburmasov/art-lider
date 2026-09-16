@@ -1,0 +1,62 @@
+---
+import ContactForm from './ContactForm.astro';
+---
+
+<div class="modal-overlay" id="callback-modal" data-open="false" role="dialog" aria-modal="true" aria-labelledby="callback-modal-title">
+  <div class="modal">
+    <button type="button" class="modal__close" data-close-callback-modal aria-label="Закрыть">×</button>
+    <h3 id="callback-modal-title" style="text-transform:none;font-size:1.3rem;">Заказать звонок</h3>
+    <p class="lead" style="font-size:0.92rem;">Оставьте номер — перезвоним в рабочее время и уточним детали.</p>
+    <ContactForm id="modal-contact-form" compact />
+  </div>
+</div>
+
+<script>
+  const overlay = document.getElementById('callback-modal');
+  const openButtons = document.querySelectorAll('[data-open-callback-modal]');
+  const closeButtons = overlay?.querySelectorAll('[data-close-callback-modal]');
+  let lastFocused: HTMLElement | null = null;
+
+  function openModal() {
+    lastFocused = document.activeElement as HTMLElement;
+    overlay?.setAttribute('data-open', 'true');
+    document.body.style.overflow = 'hidden';
+    const firstInput = overlay?.querySelector('input, select, textarea, button') as HTMLElement | null;
+    firstInput?.focus();
+  }
+
+  function closeModal() {
+    overlay?.setAttribute('data-open', 'false');
+    document.body.style.overflow = '';
+    lastFocused?.focus();
+  }
+
+  openButtons.forEach((btn) => btn.addEventListener('click', openModal));
+  closeButtons?.forEach((btn) => btn.addEventListener('click', closeModal));
+
+  overlay?.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || overlay?.getAttribute('data-open') !== 'true') return;
+    closeModal();
+  });
+
+  overlay?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const focusable = overlay.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])',
+    );
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+</script>

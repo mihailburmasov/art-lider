@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import { services } from '../../data/services';
+import { site } from '../../config/site';
+---
+
+<BaseLayout
+  title="Услуги ремонта квартир и офисов"
+  description={`Все услуги компании «${site.companyName}»: ремонт квартир и офисов, электрика, натяжные потолки, сантехника, кровля и фасад в Лысьве и Чусовом.`}
+  path="/uslugi/"
+>
+  <Breadcrumbs items={[{ name: 'Услуги', path: '/uslugi/' }]} />
+
+  <section style="padding-top:8px;">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Что мы делаем</span>
+        <h1>Услуги</h1>
+        <p class="lead">Выполняем ремонт квартир и офисов в Лысьве и Чусовом — полным циклом или по отдельным видам работ.</p>
+      </div>
+      <div class="grid grid-4">
+        {services.map((s) => <ServiceCard service={s} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

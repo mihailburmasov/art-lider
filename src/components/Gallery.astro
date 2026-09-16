@@ -1,0 +1,108 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface GalleryImage {
+  src: ImageMetadata;
+  alt?: string;
+}
+
+interface Props {
+  images: GalleryImage[];
+  fallbackAlt: string;
+}
+
+const { images, fallbackAlt } = Astro.props;
+const uid = `gallery-${Math.random().toString(36).slice(2, 9)}`;
+
+const fullImages = await Promise.all(
+  images.map((img) => getImage({ src: img.src, width: 1600, format: 'webp' })),
+);
+---
+
+<div class="gallery" id={uid}>
+  {images.map((img, i) => (
+    <button
+      type="button"
+      class="gallery__item"
+      data-full={fullImages[i].src}
+      data-alt={img.alt ?? fallbackAlt}
+      data-index={i}
+      aria-label={`Открыть фото: ${img.alt ?? fallbackAlt}`}
+    >
+      <Image src={img.src} alt={img.alt ?? fallbackAlt} width={500} loading="lazy" />
+    </button>
+  ))}
+</div>
+
+<div class="lightbox" data-open="false" data-lightbox-for={uid} role="dialog" aria-modal="true" aria-label="Просмотр фото">
+  <button type="button" class="lightbox__close" data-lightbox-close aria-label="Закрыть">×</button>
+  <button type="button" class="lightbox__prev" data-lightbox-prev aria-label="Предыдущее фото">‹</button>
+  <img data-lightbox-image src="" alt="" />
+  <button type="button" class="lightbox__next" data-lightbox-next aria-label="Следующее фото">›</button>
+  <span class="lightbox__counter" data-lightbox-counter></span>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-lightbox-for]').forEach((lightbox) => {
+    const galleryId = lightbox.getAttribute('data-lightbox-for');
+    const gallery = document.getElementById(galleryId ?? '');
+    if (!gallery) return;
+
+    const items = Array.from(gallery.querySelectorAll<HTMLButtonElement>('.gallery__item'));
+    const img = lightbox.querySelector('[data-lightbox-image]') as HTMLImageElement;
+    const counter = lightbox.querySelector('[data-lightbox-counter]') as HTMLElement;
+    let currentIndex = 0;
+    let lastFocused: HTMLElement | null = null;
+
+    function show(index: number) {
+      currentIndex = (index + items.length) % items.length;
+      const item = items[currentIndex];
+      img.src = item.dataset.full ?? '';
+      img.alt = item.dataset.alt ?? '';
+      counter.textContent = `${currentIndex + 1} / ${items.length}`;
+    }
+
+    function open(index: number) {
+      lastFocused = document.activeElement as HTMLElement;
+      show(index);
+      lightbox.setAttribute('data-open', 'true');
+      document.body.style.overflow = 'hidden';
+      (lightbox.querySelector('[data-lightbox-close]') as HTMLElement)?.focus();
+    }
+
+    function close() {
+      lightbox.setAttribute('data-open', 'false');
+      document.body.style.overflow = '';
+      lastFocused?.focus();
+    }
+
+    items.forEach((item, index) => {
+      item.addEventListener('click', () => open(index));
+    });
+
+    lightbox.querySelector('[data-lightbox-close]')?.addEventListener('click', close);
+    lightbox.querySelector('[data-lightbox-prev]')?.addEventListener('click', () => show(currentIndex - 1));
+    lightbox.querySelector('[data-lightbox-next]')?.addEventListener('click', () => show(currentIndex + 1));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.getAttribute('data-open') !== 'true') return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') show(currentIndex - 1);
+      if (e.key === 'ArrowRight') show(currentIndex + 1);
+    });
+
+    let touchStartX = 0;
+    lightbox.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    });
+    lightbox.addEventListener('touchend', (e) => {
+      const diff = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(diff) > 40) show(currentIndex + (diff < 0 ? 1 : -1));
+    });
+  });
+</script>

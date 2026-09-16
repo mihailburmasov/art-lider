@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { site } from '../../config/site';
+import { withBase } from '../../lib/url';
+---
+
+<BaseLayout
+  title="Заявка отправлена"
+  description="Спасибо за заявку — мы свяжемся с вами в рабочее время."
+  path="/spasibo/"
+  noindex
+>
+  <section>
+    <div class="container not-found">
+      <div class="advantage-card__icon" style="width:72px;height:72px;">
+        <Icon name="check" style="width:36px;height:36px" />
+      </div>
+      <h1>Спасибо, заявка отправлена!</h1>
+      <p class="lead" style="max-width:480px;">
+        Мы получили вашу заявку и свяжемся с вами в рабочее время ({site.workingHours.text}). Если вопрос срочный —
+        позвоните нам напрямую.
+      </p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
+        <a class="btn btn-primary" href={site.phone.href}>{site.phone.display}</a>
+        <a class="btn btn-ghost" href={withBase('/')}>На главную</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

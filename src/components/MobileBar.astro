@@ -1,0 +1,23 @@
+---
+import { site } from '../config/site';
+import Icon from './Icon.astro';
+---
+
+<nav class="mobile-bar" aria-label="Быстрые действия">
+  <a href={site.phone.href} data-messenger="call">
+    <Icon name="phone" style="width:20px;height:20px" />
+    Позвонить
+  </a>
+  <a href={site.messengers.whatsapp} target="_blank" rel="noopener" data-messenger="whatsapp">
+    <Icon name="whatsapp" style="width:20px;height:20px" />
+    WhatsApp
+  </a>
+  <a href={site.messengers.telegram} target="_blank" rel="noopener" data-messenger="telegram">
+    <Icon name="telegram" style="width:20px;height:20px" />
+    Telegram
+  </a>
+  <button type="button" data-open-callback-modal>
+    <Icon name="send" style="width:20px;height:20px" />
+    Заявка
+  </button>
+</nav>

@@ -1,0 +1,57 @@
+---
+// Набор простых inline-иконок (без внешних библиотек), currentColor.
+interface Props {
+  name: string;
+  class?: string;
+  style?: string;
+}
+
+const { name, class: className = '', style } = Astro.props;
+
+const paths: Record<string, string> = {
+  roller:
+    '<path d="M4 4h11v6H4z"/><path d="M9 10v4"/><rect x="7" y="14" width="4" height="6" rx="1"/><path d="M15 6h3a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-3"/>',
+  bolt: '<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/>',
+  ceiling: '<path d="M3 6h18"/><path d="M6 6v3"/><path d="M12 6v3"/><path d="M18 6v3"/><rect x="4" y="12" width="16" height="7" rx="1"/>',
+  roof: '<path d="M3 12 12 4l9 8"/><path d="M5 11v9h14v-9"/><path d="M9 20v-6h6v6"/>',
+  floor: '<path d="M3 20h18"/><path d="M3 20V9l9-5 9 5v11"/><path d="M3 14h18"/><path d="M3 9l9 5 9-5"/>',
+  concrete: '<path d="M3 21V9l9-5 9 5v12"/><path d="M3 21h18"/><path d="M9 21v-6h6v6"/>',
+  paint: '<path d="M18 3 21 6l-9 9-4 1 1-4Z"/><path d="M14 7l3 3"/><path d="M5 21c-1-3 1-4 1-6 0-1.5-1-2-1-2"/>',
+  weld: '<path d="M4 20 20 4"/><path d="M4 4l4 4"/><path d="M16 16l4 4"/><path d="M9 11l-3 3"/>',
+  window: '<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M12 4v16"/><path d="M4 12h16"/>',
+  pipe: '<path d="M4 8h9a3 3 0 0 1 3 3v9"/><circle cx="4" cy="8" r="2"/><circle cx="16" cy="20" r="2"/>',
+  phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/>',
+  whatsapp:
+    '<path d="M20 12a8 8 0 1 1-14.9-4L4 20l4.2-1.1A8 8 0 0 1 20 12Z"/><path d="M9 10c0 3 2 5 5 5" stroke-linecap="round"/>',
+  telegram: '<path d="M21 4 3 11l6 2m12-9-4 16-6-6m10-10-9.5 9"/>',
+  vk: '<path d="M4 4h4c.3 3.5 2 6.5 3 7.5V4h4v6c1.5-1 3-3.5 3.5-6H22c-.5 3-2.3 5.5-3.5 7 1.3 1.2 3 3.5 3.5 6h-3.5c-.6-2-2-4-4-5v5h-1C11 17 5.5 14 4 4Z"/>',
+  max: '<circle cx="12" cy="12" r="9"/><path d="M9 15V9l3 3 3-3v6"/>',
+  check: '<path d="M5 13l4 4L19 7"/>',
+  star: '<path d="M12 3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1L6.6 19l1.3-6-4.6-4.1 6.1-.6Z"/>',
+  arrow: '<path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>',
+  close: '<path d="M6 6l12 12"/><path d="M18 6 6 18"/>',
+  send: '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/>',
+  home: '<path d="M4 11 12 4l8 7"/><path d="M6 10v10h12V10"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+  shield: '<path d="M12 3l8 3v6c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V6Z"/>',
+  document: '<path d="M6 3h9l4 4v14H6Z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/>',
+  camera: '<path d="M4 8h3l2-3h6l2 3h3v11H4Z"/><circle cx="12" cy="13.5" r="3.5"/>',
+  chevronDown: '<path d="M6 9l6 6 6-6"/>',
+  mapPin: '<path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/>',
+};
+
+const d = paths[name] ?? paths.check;
+---
+
+<svg
+  class={`icon icon-${name} ${className}`}
+  style={style}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.8"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  set:html={d}
+/>

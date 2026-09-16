@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { reviews } from '../../data/reviews';
+import { site } from '../../config/site';
+---
+
+<BaseLayout
+  title="Отзывы клиентов"
+  description={`Отзывы клиентов о ремонте квартир и офисов от компании «${site.companyName}» в Лысьве и Чусовом.`}
+  path="/otzyvy/"
+>
+  <Breadcrumbs items={[{ name: 'Отзывы', path: '/otzyvy/' }]} />
+
+  <section style="padding-top:8px;">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Отзывы</span>
+        <h1>Что говорят клиенты</h1>
+        <p class="lead">Больше отзывов — в нашей группе ВКонтакте, где их могут оставить реальные клиенты.</p>
+      </div>
+
+      <div class="grid grid-3">
+        {reviews.map((r) => (
+          <div class="card review-card">
+            <span class="review-card__stars" aria-hidden="true">{'★'.repeat(r.rating)}</span>
+            <p>{r.text}</p>
+            <div>
+              <span class="review-card__name">{r.name}</span>
+              <div class="review-card__city">{r.city}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="card" style="margin-top:40px;text-align:center;">
+        <h3 style="text-transform:none;">Оставьте свой отзыв</h3>
+        <p class="lead">Будем рады обратной связи о сотрудничестве — оставьте отзыв в нашей группе ВКонтакте.</p>
+        <a href={site.messengers.vk} target="_blank" rel="noopener" class="btn btn-primary">Оставить отзыв в ВКонтакте</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

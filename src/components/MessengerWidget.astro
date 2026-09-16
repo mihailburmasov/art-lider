@@ -1,0 +1,50 @@
+---
+import { site } from '../config/site';
+import Icon from './Icon.astro';
+---
+
+<div class="messenger-widget" data-open="false" id="messenger-widget">
+  <div class="messenger-widget__panel">
+    <a class="messenger-widget__item" href={site.messengers.whatsapp} target="_blank" rel="noopener" data-messenger="whatsapp">
+      <span class="icon" style="background:#25D366"><Icon name="whatsapp" style="width:18px;height:18px" /></span>
+      WhatsApp
+    </a>
+    <a class="messenger-widget__item" href={site.messengers.telegram} target="_blank" rel="noopener" data-messenger="telegram">
+      <span class="icon" style="background:#229ED9"><Icon name="telegram" style="width:18px;height:18px" /></span>
+      Telegram
+    </a>
+    <a class="messenger-widget__item" href={site.messengers.max} data-messenger="max">
+      <span class="icon" style="background:#1E1E1E"><Icon name="max" style="width:18px;height:18px" /></span>
+      MAX
+    </a>
+    <a class="messenger-widget__item" href={site.messengers.vk} target="_blank" rel="noopener" data-messenger="vk">
+      <span class="icon" style="background:#0077FF"><Icon name="vk" style="width:18px;height:18px" /></span>
+      ВКонтакте
+    </a>
+    <a class="messenger-widget__item" href={site.phone.href} data-messenger="call">
+      <span class="icon" style="background:var(--color-primary)"><Icon name="phone" style="width:18px;height:18px" /></span>
+      Позвонить
+    </a>
+  </div>
+  <button type="button" class="messenger-widget__toggle" aria-expanded="false" aria-label="Связаться с нами">
+    <Icon name="send" style="width:24px;height:24px" />
+  </button>
+</div>
+
+<script>
+  const widget = document.getElementById('messenger-widget');
+  const toggle = widget?.querySelector('.messenger-widget__toggle');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = widget?.getAttribute('data-open') === 'true';
+    widget?.setAttribute('data-open', String(!isOpen));
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (widget && !widget.contains(e.target as Node)) {
+      widget.setAttribute('data-open', 'false');
+      toggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>

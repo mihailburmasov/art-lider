@@ -1,0 +1,106 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import Icon from '../../components/Icon.astro';
+import { site } from '../../config/site';
+import ofisFasad from '../../assets/brand/ofis-fasad.jpg';
+
+const mapQuery = encodeURIComponent(site.address.full);
+const mapSrc = `https://yandex.ru/map-widget/v1/?text=${mapQuery}&z=16`;
+---
+
+<BaseLayout
+  title="Контакты"
+  description={`Контакты компании «${site.companyName}»: адрес офиса в Лысьве, телефон, мессенджеры, режим работы.`}
+  path="/kontakty/"
+>
+  <Breadcrumbs items={[{ name: 'Контакты', path: '/kontakty/' }]} />
+
+  <section style="padding-top:8px;">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Свяжитесь с нами</span>
+        <h1>Контакты</h1>
+      </div>
+
+      <div class="two-col" style="align-items:start;">
+        <div>
+          <ul style="display:grid;gap:18px;margin-bottom:28px;">
+            <li style="display:flex;gap:12px;">
+              <Icon name="mapPin" style="width:22px;height:22px;color:var(--color-primary);flex-shrink:0;" />
+              <span>{site.address.full}</span>
+            </li>
+            <li style="display:flex;gap:12px;">
+              <Icon name="phone" style="width:22px;height:22px;color:var(--color-primary);flex-shrink:0;" />
+              <a href={site.phone.href}>{site.phone.display}</a>
+            </li>
+            <li style="display:flex;gap:12px;">
+              <Icon name="clock" style="width:22px;height:22px;color:var(--color-primary);flex-shrink:0;" />
+              <span>{site.workingHours.text}</span>
+            </li>
+          </ul>
+
+          <div class="tag-list" style="margin-bottom:28px;">
+            <a class="btn btn-ghost btn-sm" href={site.messengers.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
+            <a class="btn btn-ghost btn-sm" href={site.messengers.telegram} target="_blank" rel="noopener">Telegram</a>
+            <a class="btn btn-ghost btn-sm" href={site.messengers.max}>MAX</a>
+            <a class="btn btn-ghost btn-sm" href={site.messengers.vk} target="_blank" rel="noopener">ВКонтакте</a>
+          </div>
+
+          <Image src={ofisFasad} alt="Как нас найти: офис Арт Лидер, вывеска на фасаде, ул. Федосеева 37" width={600} loading="lazy" />
+        </div>
+
+        <div class="card">
+          <ContactForm id="kontakty-contact-form" />
+        </div>
+      </div>
+
+      <div style="margin-top:48px;">
+        <h2>Как нас найти</h2>
+        <div class="map-embed" id="map-embed" data-src={mapSrc}>
+          <button type="button" class="map-embed__placeholder" id="map-load-btn">
+            <Icon name="mapPin" style="width:32px;height:32px;color:var(--color-primary);" />
+            Показать карту
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const container = document.getElementById('map-embed');
+  const btn = document.getElementById('map-load-btn');
+  let loaded = false;
+
+  function loadMap() {
+    if (loaded || !container) return;
+    loaded = true;
+    const src = container.dataset.src;
+    const iframe = document.createElement('iframe');
+    iframe.src = src ?? '';
+    iframe.loading = 'lazy';
+    iframe.title = 'Карта: как нас найти';
+    container.innerHTML = '';
+    container.appendChild(iframe);
+  }
+
+  btn?.addEventListener('click', loadMap);
+
+  if (container && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadMap();
+            observer.disconnect();
+          }
+        });
+      },
+      { rootMargin: '200px' },
+    );
+    observer.observe(container);
+  }
+</script>

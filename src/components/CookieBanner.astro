@@ -1,0 +1,34 @@
+---
+import { withBase } from '../lib/url';
+---
+
+<div class="cookie-banner" id="cookie-banner" data-visible="false">
+  <p>
+    Мы используем файлы cookie и Яндекс.Метрику для аналитики посещаемости сайта. Продолжая пользоваться сайтом, вы соглашаетесь с
+    <a href={withBase('/politika-konfidencialnosti/')}>политикой конфиденциальности</a>.
+  </p>
+  <button type="button" class="btn btn-accent btn-sm" id="cookie-accept">Понятно</button>
+</div>
+
+<script>
+  const KEY = 'cookie-consent-v1';
+  const banner = document.getElementById('cookie-banner');
+  const acceptBtn = document.getElementById('cookie-accept');
+
+  try {
+    if (!localStorage.getItem(KEY)) {
+      banner?.setAttribute('data-visible', 'true');
+    }
+  } catch {
+    // localStorage недоступен (приватный режим и т.п.) — просто не показываем баннер повторно в рамках сессии
+  }
+
+  acceptBtn?.addEventListener('click', () => {
+    try {
+      localStorage.setItem(KEY, '1');
+    } catch {
+      /* noop */
+    }
+    banner?.setAttribute('data-visible', 'false');
+  });
+</script>

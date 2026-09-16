@@ -1,0 +1,99 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  before: ImageMetadata;
+  after: ImageMetadata;
+  caption?: string;
+  priority?: boolean;
+}
+
+const { before, after, caption, priority = false } = Astro.props;
+const uid = `ba-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<figure class="before-after-wrap">
+  <div class="before-after" data-hint="true">
+    <div class="before-after__frame before-after__frame--before">
+      <Image
+        src={before}
+        alt={caption ? `${caption} — до ремонта` : 'До ремонта'}
+        width={900}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : 'auto'}
+      />
+    </div>
+    <div class="before-after__frame before-after__frame--after">
+      <Image
+        src={after}
+        alt={caption ? `${caption} — после ремонта` : 'После ремонта'}
+        width={900}
+        loading={priority ? 'eager' : 'lazy'}
+      />
+    </div>
+    <span class="before-after__label before-after__label--before">ДО</span>
+    <span class="before-after__label before-after__label--after">ПОСЛЕ</span>
+    <div class="before-after__divider"></div>
+    <div class="before-after__handle" aria-hidden="true">◀ ▶</div>
+    <input
+      class="before-after__input"
+      type="range"
+      min="0"
+      max="100"
+      value="50"
+      step="1"
+      aria-label="Сравнение до и после ремонта"
+      id={uid}
+    />
+  </div>
+  {caption && <figcaption class="before-after__caption">{caption}</figcaption>}
+</figure>
+
+<script>
+  function setPos(container: HTMLElement, value: number) {
+    container.style.setProperty('--pos', `${value}%`);
+  }
+
+  document.querySelectorAll<HTMLElement>('.before-after').forEach((container) => {
+    const input = container.querySelector('input[type="range"]') as HTMLInputElement | null;
+    if (!input) return;
+
+    input.addEventListener('input', () => setPos(container, Number(input.value)));
+
+    const updateFromPointer = (clientX: number) => {
+      const rect = container.getBoundingClientRect();
+      const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+      const value = Math.round(ratio * 100);
+      input.value = String(value);
+      setPos(container, value);
+    };
+
+    container.addEventListener('pointerdown', (e) => {
+      updateFromPointer(e.clientX);
+      container.setAttribute('data-hint', 'false');
+    });
+
+    container.addEventListener('pointermove', (e) => {
+      if (e.buttons !== 1) return;
+      updateFromPointer(e.clientX);
+    });
+
+    input.addEventListener('focus', () => container.setAttribute('data-hint', 'false'));
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              container.setAttribute('data-hint', 'true');
+              observer.disconnect();
+            }
+          });
+        },
+        { threshold: 0.4 },
+      );
+      observer.observe(container);
+    }
+  });
+</script>

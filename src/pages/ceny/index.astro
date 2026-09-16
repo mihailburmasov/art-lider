@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { services } from '../../data/services';
+import { site } from '../../config/site';
+import { withBase } from '../../lib/url';
+---
+
+<BaseLayout
+  title="Цены на ремонт квартир и офисов"
+  description={`Ориентировочные цены на ремонт квартир и офисов, электрику, натяжные потолки и другие услуги в Лысьве и Чусовом. Точная смета — после бесплатного замера.`}
+  path="/ceny/"
+>
+  <Breadcrumbs items={[{ name: 'Цены', path: '/ceny/' }]} />
+
+  <section style="padding-top:8px;">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Прайс-лист</span>
+        <h1>Цены</h1>
+        <p class="lead">
+          Ниже — ориентировочная стоимость по видам работ. Точная смета составляется после бесплатного замера объекта в
+          {site.address.city} или {site.areaServed[1]} и зависит от объёма работ, материалов и состояния помещения.
+        </p>
+      </div>
+
+      <div style="display:grid;gap:40px;">
+        {services.map((s) => (
+          <div>
+            <h2 id={s.slug}>{s.title}</h2>
+            <table class="price-table">
+              <thead>
+                <tr><th>Работа</th><th>Ед.</th><th>Цена</th></tr>
+              </thead>
+              <tbody>
+                {s.prices.map((row) => (
+                  <tr>
+                    <td>{row.item}</td>
+                    <td>{row.unit}</td>
+                    <td class="price">{row.priceFrom ? `от ${row.priceFrom.toLocaleString('ru-RU')} ₽` : 'по запросу'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p style="margin-top:10px;"><a href={withBase(`/uslugi/${s.slug}/`)}>Подробнее об услуге «{s.shortTitle}» →</a></p>
+          </div>
+        ))}
+      </div>
+
+      <div class="card" style="margin-top:48px;text-align:center;">
+        <h3 style="text-transform:none;">Нужен точный расчёт?</h3>
+        <p class="lead">Оставьте заявку — выедем на бесплатный замер и составим смету.</p>
+        <button type="button" class="btn btn-primary" data-open-callback-modal>Рассчитать стоимость</button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

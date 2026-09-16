@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { services } from '../../data/services';
+import { site } from '../../config/site';
+
+const allProjects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const usedServiceSlugs = new Set(allProjects.flatMap((p) => p.data.services));
+const filterServices = services.filter((s) => usedServiceSlugs.has(s.slug));
+---
+
+<BaseLayout
+  title="Наши работы — примеры ремонта квартир и офисов"
+  description={`Портфолио компании «${site.companyName}»: фото выполненных ремонтов квартир и офисов в Лысьве и Чусовом, слайдеры «до/после».`}
+  path="/raboty/"
+>
+  <Breadcrumbs items={[{ name: 'Наши работы', path: '/raboty/' }]} />
+
+  <section style="padding-top:8px;">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Портфолио</span>
+        <h1>Наши работы</h1>
+        <p class="lead">Реальные объекты, которые мы отремонтировали в Лысьве и Чусовом. У части объектов — слайдер «до/после».</p>
+      </div>
+
+      <div class="filters" role="group" aria-label="Фильтр по виду работ" id="project-filters">
+        <button type="button" class="filter-btn" aria-pressed="true" data-filter="all">Все объекты</button>
+        {filterServices.map((s) => (
+          <button type="button" class="filter-btn" aria-pressed="false" data-filter={s.slug}>{s.shortTitle}</button>
+        ))}
+      </div>
+
+      <div class="grid grid-3" id="projects-grid">
+        {allProjects.map((p, i) => (
+          <div class="project-item" data-services={p.data.services.join(',')}>
+            <ProjectCard project={p} priority={i < 3} />
+          </div>
+        ))}
+      </div>
+      <p id="no-results" class="lead" style="display:none;text-align:center;margin-top:24px;">По этому фильтру объектов пока нет — посмотрите остальные работы или свяжитесь с нами, чтобы обсудить похожий проект.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const filters = document.getElementById('project-filters');
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.project-item'));
+  const noResults = document.getElementById('no-results');
+
+  filters?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
+    if (!btn) return;
+
+    filters.querySelectorAll('.filter-btn').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+    btn.setAttribute('aria-pressed', 'true');
+
+    const filter = btn.dataset.filter;
+    let visibleCount = 0;
+    items.forEach((item) => {
+      const services = item.dataset.services?.split(',') ?? [];
+      const show = filter === 'all' || services.includes(filter ?? '');
+      item.style.display = show ? '' : 'none';
+      if (show) visibleCount++;
+    });
+
+    if (noResults) noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+  });
+</script>

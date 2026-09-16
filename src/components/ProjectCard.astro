@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/url';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  priority?: boolean;
+}
+
+const { project, priority = false } = Astro.props;
+const { title, city, objectType, area, cover, beforeAfter } = project.data;
+const hasBeforeAfter = Boolean(beforeAfter?.length);
+---
+
+<a href={withBase(`/raboty/${project.id}/`)} class="project-card">
+  <div class="project-card__media">
+    {hasBeforeAfter && <span class="badge badge-before-after">До / После</span>}
+    <Image
+      src={cover}
+      alt={title}
+      width={640}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+    />
+  </div>
+  <div class="project-card__body">
+    <div class="project-card__meta">
+      <span>{city}</span>
+      <span>{objectType}</span>
+      {area && <span>{area} м²</span>}
+    </div>
+    <h3>{title}</h3>
+  </div>
+</a>

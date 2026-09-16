@@ -1,0 +1,105 @@
+---
+import { getCollection, render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import BeforeAfter from '../../../components/BeforeAfter.astro';
+import Gallery from '../../../components/Gallery.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import JsonLd from '../../../components/JsonLd.astro';
+import { getServiceBySlug } from '../../../data/services';
+import { site } from '../../../config/site';
+import { withBase } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { title, city, objectType, area, duration, services: serviceSlugs, beforeAfter, gallery, cover } = project.data;
+const { Content } = await render(project);
+
+const allProjects = await getCollection('projects');
+const otherProjects = allProjects.filter((p) => p.id !== project.id).slice(0, 3);
+const relatedServiceObjs = serviceSlugs.map((s) => getServiceBySlug(s)).filter(Boolean);
+
+const coverImage = await getImage({ src: cover, width: 1200 });
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: title,
+  about: `Ремонт: ${title}`,
+  locationCreated: { '@type': 'Place', name: city },
+  image: new URL(coverImage.src, site.url).toString(),
+};
+---
+
+<BaseLayout
+  title={`${title} — ${city}`}
+  description={`${title}. Объект в ${city}: ${objectType}${area ? `, ${area} м²` : ''}. Фото выполненного ремонта от компании «${site.companyName}».`}
+  path={`/raboty/${project.id}/`}
+>
+  <Fragment slot="head">
+    <JsonLd data={jsonLd} />
+  </Fragment>
+
+  <Breadcrumbs items={[{ name: 'Наши работы', path: '/raboty/' }, { name: title, path: `/raboty/${project.id}/` }]} />
+
+  <section style="padding-top:8px;">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{city} · {objectType}</span>
+        <h1>{title}</h1>
+        <div class="stat-row">
+          {area && <div><strong>{area} м²</strong><span>Площадь</span></div>}
+          {duration && <div><strong>{duration}</strong><span>Срок работ</span></div>}
+          <div><strong>{city}</strong><span>Город</span></div>
+        </div>
+        {relatedServiceObjs.length > 0 && (
+          <div class="tag-list" style="margin-top:16px;">
+            {relatedServiceObjs.map((s) => s && <a href={withBase(`/uslugi/${s.slug}/`)} class="tag">{s.shortTitle}</a>)}
+          </div>
+        )}
+      </div>
+
+      <div class="content" style="max-width:760px;margin-bottom:40px;">
+        <Content />
+      </div>
+
+      {beforeAfter && beforeAfter.length > 0 && (
+        <div style="margin-bottom:40px;display:grid;gap:32px;">
+          {beforeAfter.map((pair, i) => (
+            <BeforeAfter before={pair.before} after={pair.after} caption={pair.caption} priority={i === 0} />
+          ))}
+        </div>
+      )}
+
+      {gallery && gallery.length > 0 && (
+        <>
+          <h2>Галерея</h2>
+          <Gallery images={gallery} fallbackAlt={title} />
+        </>
+      )}
+
+      <div style="text-align:center;margin-top:48px;">
+        <button type="button" class="btn btn-primary" data-open-callback-modal>Хочу так же</button>
+      </div>
+    </div>
+  </section>
+
+  {otherProjects.length > 0 && (
+    <section class="section-alt">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Портфолио</span>
+          <h2>Другие объекты</h2>
+        </div>
+        <div class="grid grid-3">
+          {otherProjects.map((p) => <ProjectCard project={p} />)}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

@@ -1,0 +1,68 @@
+---
+import { site } from '../config/site';
+import { services } from '../data/services';
+import Icon from './Icon.astro';
+import { withBase } from '../lib/url';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <span class="footer-logo">{site.legalBrand}</span>
+        <p>{site.tagline} в {site.address.city} и {site.areaServed[1]}.</p>
+        <p>{site.address.full}</p>
+        <p>{site.workingHours.text}</p>
+        <div class="footer-social">
+          <a href={site.messengers.whatsapp} aria-label="WhatsApp" target="_blank" rel="noopener"><Icon name="whatsapp" style="width:18px;height:18px" /></a>
+          <a href={site.messengers.telegram} aria-label="Telegram" target="_blank" rel="noopener"><Icon name="telegram" style="width:18px;height:18px" /></a>
+          <a href={site.messengers.vk} aria-label="ВКонтакте" target="_blank" rel="noopener"><Icon name="vk" style="width:18px;height:18px" /></a>
+          <a href={site.messengers.max} aria-label="MAX"><Icon name="max" style="width:18px;height:18px" /></a>
+        </div>
+      </div>
+
+      <div>
+        <h3>Меню</h3>
+        <ul>
+          <li><a href={withBase('/uslugi/')}>Услуги</a></li>
+          <li><a href={withBase('/raboty/')}>Наши работы</a></li>
+          <li><a href={withBase('/ceny/')}>Цены</a></li>
+          <li><a href={withBase('/o-kompanii/')}>О компании</a></li>
+          <li><a href={withBase('/otzyvy/')}>Отзывы</a></li>
+          <li><a href={withBase('/kontakty/')}>Контакты</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Услуги</h3>
+        <ul>
+          {services.slice(0, 6).map((s) => (
+            <li><a href={withBase(`/uslugi/${s.slug}/`)}>{s.shortTitle}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h3>Контакты</h3>
+        <ul>
+          <li><a href={site.phone.href}>{site.phone.display}</a></li>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={site.messengers.vk} target="_blank" rel="noopener">Группа ВК — {site.vkSubscribers} подписчиков</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>
+        © {year} {site.companyName}. ИП {site.legal.fullName} · ИНН {site.legal.inn} · ОГРНИП {site.legal.ogrnip}
+      </span>
+      <span>
+        <a href={withBase('/politika-konfidencialnosti/')}>Политика конфиденциальности</a>
+        {' · '}
+        <a href={withBase('/soglasie/')}>Согласие на обработку персональных данных</a>
+      </span>
+    </div>
+  </div>
+</footer>

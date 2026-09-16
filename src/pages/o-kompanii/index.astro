@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Icon from '../../components/Icon.astro';
+import { site } from '../../config/site';
+import { withBase } from '../../lib/url';
+import ofisFasad from '../../assets/brand/ofis-fasad.jpg';
+import rezhimRaboty from '../../assets/brand/rezhim-raboty.jpg';
+
+const guarantees = [
+  { icon: 'document', title: 'Договор на все виды работ', text: 'Фиксируем объём, сроки и стоимость до начала ремонта.' },
+  { icon: 'shield', title: 'Гарантия', text: 'Гарантийные обязательства на выполненные работы прописаны в договоре.' },
+  { icon: 'check', title: 'Смета до начала работ', text: 'Итоговая стоимость не меняется без согласования с заказчиком.' },
+];
+---
+
+<BaseLayout
+  title="О компании «Арт Лидер»"
+  description={`«${site.companyName}» — ремонт квартир и офисов в Лысьве и Чусовом. Свой офис, свои бригады, договор и гарантия на все виды работ.`}
+  path="/o-kompanii/"
+>
+  <Breadcrumbs items={[{ name: 'О компании', path: '/o-kompanii/' }]} />
+
+  <section style="padding-top:8px;">
+    <div class="container">
+      <div class="two-col">
+        <div>
+          <span class="eyebrow">О компании</span>
+          <h1>«Арт Лидер» — ремонт квартир и офисов в Лысьве и Чусовом</h1>
+          <p class="lead">
+            Мы занимаемся ремонтом квартир, офисов и частных домов в Лысьве, Чусовом и ближайших населённых пунктах Пермского края.
+            В штате — электрики, сантехники, отделочники и монтажники натяжных потолков, поэтому большинство работ выполняем
+            своими силами, без привлечения сторонних бригад на каждый этап.
+          </p>
+          <p>
+            Офис компании находится в Лысьве, на ул. Федосеева, 37 — сюда можно приехать на консультацию, посмотреть образцы
+            материалов и обсудить проект очно.
+            {/* TODO: дополнить историю компании — дата основания, количество выполненных объектов и т.п. */}
+          </p>
+        </div>
+        <Image src={ofisFasad} alt="Офис компании Арт Лидер в Лысьве, ул. Федосеева, 37" width={700} loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Гарантии</span>
+        <h2>Работаем официально</h2>
+      </div>
+      <div class="grid grid-3">
+        {guarantees.map((g) => (
+          <div class="card advantage-card">
+            <div class="advantage-card__icon"><Icon name={g.icon} style="width:24px;height:24px" /></div>
+            <h3>{g.title}</h3>
+            <p>{g.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="two-col">
+        <Image src={rezhimRaboty} alt="Режим работы офиса Арт Лидер: Пн-Пт 10-18, Сб 10-17" width={600} loading="lazy" />
+        <div>
+          <span class="eyebrow">Реквизиты</span>
+          <h2>Юридическая информация</h2>
+          <ul style="display:grid;gap:8px;">
+            <li>ИП {site.legal.fullName}</li>
+            <li>ИНН {site.legal.inn}</li>
+            <li>ОГРНИП {site.legal.ogrnip}</li>
+            <li>Адрес: {site.address.full}</li>
+            <li>Режим работы: {site.workingHours.text}</li>
+          </ul>
+          <p class="lead" style="font-size:0.85rem;margin-top:14px;">
+            См. также <a href={withBase('/politika-konfidencialnosti/')}>политику конфиденциальности</a> и
+            <a href={withBase('/soglasie/')}>согласие на обработку персональных данных</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

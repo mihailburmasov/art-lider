@@ -1,0 +1,18 @@
+---
+import Icon from './Icon.astro';
+import type { Service } from '../data/services';
+import { withBase } from '../lib/url';
+
+interface Props {
+  service: Service;
+}
+
+const { service } = Astro.props;
+---
+
+<a href={withBase(`/uslugi/${service.slug}/`)} class="card service-card">
+  <Icon name={service.icon} class="service-card__icon" />
+  <h3>{service.shortTitle}</h3>
+  <p>{service.summary}</p>
+  <span class="card-link">Подробнее →</span>
+</a>

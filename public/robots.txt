@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /api/
+Disallow: /spasibo/
+
+Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content /
+
+Sitemap: https://art-lider-remont.ru/sitemap-index.xml

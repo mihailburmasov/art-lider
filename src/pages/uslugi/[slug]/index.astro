@@ -1,0 +1,161 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import FAQ from '../../../components/FAQ.astro';
+import ContactForm from '../../../components/ContactForm.astro';
+import JsonLd from '../../../components/JsonLd.astro';
+import Icon from '../../../components/Icon.astro';
+import { services, getServiceBySlug } from '../../../data/services';
+import { serviceJsonLd } from '../../../lib/jsonld';
+import { site } from '../../../config/site';
+import { withBase } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug } }));
+}
+
+const { slug } = Astro.params;
+const service = getServiceBySlug(slug as string)!;
+
+const allProjects = await getCollection('projects');
+const relatedProjects = allProjects
+  .filter((p) => p.data.services.includes(service.slug))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const relatedServices = service.related.map((slug) => getServiceBySlug(slug)).filter(Boolean);
+---
+
+<BaseLayout
+  title={`${service.title} в ${site.address.city} и Чусовом`}
+  description={`${service.summary} Работаем в Лысьве и Чусовом, заключаем договор, гарантия на работы. Звоните: ${site.phone.display}.`}
+  path={`/uslugi/${service.slug}/`}
+>
+  <Fragment slot="head">
+    <JsonLd data={serviceJsonLd(service)} />
+  </Fragment>
+
+  <Breadcrumbs items={[{ name: 'Услуги', path: '/uslugi/' }, { name: service.shortTitle, path: `/uslugi/${service.slug}/` }]} />
+
+  <section style="padding-top:8px;">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Услуга</span>
+        <h1>{service.title} в {site.address.city} и Чусовом</h1>
+        <p class="lead">{service.summary}</p>
+        <div class="hero__cta" style="margin-top:20px;">
+          <button type="button" class="btn btn-primary" data-open-callback-modal>Рассчитать стоимость</button>
+          <a class="btn btn-ghost" href={site.phone.href}>
+            <Icon name="phone" style="width:18px;height:18px" /> {site.phone.display}
+          </a>
+        </div>
+      </div>
+
+      <div class="two-col" style="align-items:start;">
+        <div>
+          {service.description.map((p) => <p>{p}</p>)}
+
+          <h2 style="margin-top:32px;">Что входит в работу</h2>
+          <ul style="display:grid;gap:10px;">
+            {service.whatIncluded.map((item) => (
+              <li style="display:flex;gap:10px;align-items:flex-start;">
+                <Icon name="check" style="width:20px;height:20px;color:var(--color-primary);flex-shrink:0;margin-top:2px;" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+
+          <h2 style="margin-top:32px;">Этапы работы</h2>
+          <div class="steps">
+            {service.stages.map((stage) => (
+              <div class="step"><p style="margin:0;">{stage}</p></div>
+            ))}
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="text-transform:none;">Ориентировочные цены</h3>
+          <table class="price-table">
+            <thead>
+              <tr><th>Работа</th><th>Ед.</th><th>Цена</th></tr>
+            </thead>
+            <tbody>
+              {service.prices.map((row) => (
+                <tr>
+                  <td>{row.item}</td>
+                  <td>{row.unit}</td>
+                  <td class="price">{row.priceFrom ? `от ${row.priceFrom.toLocaleString('ru-RU')} ₽` : 'по запросу'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p class="lead" style="font-size:0.85rem;margin-top:12px;">Точная стоимость — после бесплатного замера на объекте. Полный прайс — на странице <a href={withBase('/ceny/')}>«Цены»</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {relatedProjects.length > 0 && (
+    <section class="section-alt">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Примеры</span>
+          <h2>Объекты по услуге «{service.shortTitle}»</h2>
+        </div>
+        <div class="grid grid-3">
+          {relatedProjects.map((p) => <ProjectCard project={p} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Вопросы</span>
+        <h2>Вопросы и ответы по услуге</h2>
+      </div>
+      <div style="max-width:760px;">
+        <FAQ items={service.faq} />
+      </div>
+    </div>
+  </section>
+
+  {relatedServices.length > 0 && (
+    <section class="section-alt">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Смежные услуги</span>
+          <h2>Также может понадобиться</h2>
+        </div>
+        <div class="grid grid-3">
+          {relatedServices.map((s) => s && (
+            <a href={withBase(`/uslugi/${s.slug}/`)} class="card service-card">
+              <Icon name={s.icon} class="service-card__icon" />
+              <h3>{s.shortTitle}</h3>
+              <p>{s.summary}</p>
+              <span class="card-link">Подробнее →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section-dark">
+    <div class="container">
+      <div class="two-col">
+        <div>
+          <span class="eyebrow" style="color:var(--color-accent)">Заявка</span>
+          <h2>Оставьте заявку на «{service.shortTitle}»</h2>
+          <p class="lead" style="color:rgba(255,255,255,0.8)">Перезвоним и уточним детали, выедем на бесплатный замер.</p>
+        </div>
+        <div class="card">
+          <ContactForm id={`service-${service.slug}-contact-form`} />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

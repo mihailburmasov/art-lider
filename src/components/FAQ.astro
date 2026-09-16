@@ -1,0 +1,22 @@
+---
+import JsonLd from './JsonLd.astro';
+import { faqJsonLd } from '../lib/jsonld';
+
+interface Props {
+  items: { q: string; a: string }[];
+  withJsonLd?: boolean;
+}
+
+const { items, withJsonLd = true } = Astro.props;
+---
+
+<div class="faq-list">
+  {items.map((item) => (
+    <details class="faq-item">
+      <summary>{item.q}</summary>
+      <p>{item.a}</p>
+    </details>
+  ))}
+</div>
+
+{withJsonLd && <JsonLd data={faqJsonLd(items)} />}

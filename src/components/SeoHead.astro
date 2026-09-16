@@ -1,0 +1,45 @@
+---
+import { site } from '../config/site';
+import { withBase } from '../lib/url';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  noindex?: boolean;
+  ogImage?: string;
+}
+
+const { title, description, path, noindex = false, ogImage = site.socialImage } = Astro.props;
+
+const canonical = new URL(path, site.url).toString();
+const ogImageUrl = new URL(ogImage, site.url).toString();
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content={site.themeColor} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={site.companyName} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:locale" content="ru_RU" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+{site.yandexVerification && <meta name="yandex-verification" content={site.yandexVerification} />}
+{site.googleVerification && <meta name="google-site-verification" content={site.googleVerification} />}
+
+<link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+<link rel="icon" href={withBase('/favicon.ico')} sizes="any" />
+<link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+<link rel="manifest" href={withBase('/site.webmanifest')} />

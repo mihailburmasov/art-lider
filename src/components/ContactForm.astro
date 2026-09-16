@@ -1,0 +1,247 @@
+---
+import { services } from '../data/services';
+import { withBase } from '../lib/url';
+
+interface Props {
+  id: string;
+  compact?: boolean;
+  title?: string;
+}
+
+const { id, compact = false, title = 'Оставить заявку' } = Astro.props;
+---
+
+<form
+  class="contact-form"
+  id={id}
+  data-contact-form
+  method="POST"
+  action="/api/send.php"
+  enctype="multipart/form-data"
+  novalidate
+>
+  {!compact && <h3>{title}</h3>}
+  <div class="form-grid form-grid--2col">
+    <div class="field">
+      <label for={`${id}-name`}>Имя *</label>
+      <input type="text" id={`${id}-name`} name="name" autocomplete="name" required />
+      <span class="field-error" data-error-for="name"></span>
+    </div>
+    <div class="field">
+      <label for={`${id}-phone`}>Телефон *</label>
+      <input type="tel" id={`${id}-phone`} name="phone" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required />
+      <span class="field-error" data-error-for="phone"></span>
+    </div>
+  </div>
+
+  <div class="form-grid form-grid--2col">
+    <div class="field">
+      <label for={`${id}-service`}>Услуга</label>
+      <select id={`${id}-service`} name="service">
+        <option value="">Не выбрано</option>
+        {services.map((s) => (
+          <option value={s.title}>{s.title}</option>
+        ))}
+        <option value="Другое">Другое</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for={`${id}-city`}>Город</label>
+      <select id={`${id}-city`} name="city">
+        <option value="Лысьва">Лысьва</option>
+        <option value="Чусовой">Чусовой</option>
+        <option value="другое">Другое</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for={`${id}-comment`}>Комментарий</label>
+    <textarea id={`${id}-comment`} name="comment" placeholder="Расскажите о задаче: тип объекта, площадь, желаемые сроки"></textarea>
+  </div>
+
+  {!compact && (
+    <div class="field">
+      <label for={`${id}-photos`}>Фото помещения (необязательно)</label>
+      <input type="file" id={`${id}-photos`} name="photos[]" accept="image/*" multiple />
+      <span class="file-hint">До 5 фото, не более 10 МБ суммарно</span>
+      <span class="field-error" data-error-for="photos"></span>
+    </div>
+  )}
+
+  <label class="checkbox-field">
+    <input type="checkbox" name="consent" required />
+    <span>Я даю согласие на <a href={withBase('/soglasie/')} target="_blank">обработку персональных данных</a> *</span>
+  </label>
+
+  <div class="honeypot" aria-hidden="true">
+    <label for={`${id}-website`}>Оставьте это поле пустым</label>
+    <input type="text" id={`${id}-website`} name="website" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <input type="hidden" name="source_page" value="" data-field="source_page" />
+  <input type="hidden" name="utm_source" value="" data-field="utm_source" />
+  <input type="hidden" name="utm_medium" value="" data-field="utm_medium" />
+  <input type="hidden" name="utm_campaign" value="" data-field="utm_campaign" />
+  <input type="hidden" name="utm_term" value="" data-field="utm_term" />
+  <input type="hidden" name="utm_content" value="" data-field="utm_content" />
+  <input type="hidden" name="rendered_at" value="" data-field="rendered_at" />
+
+  <button type="submit" class="btn btn-primary btn-block">Отправить заявку</button>
+  <p class="form-status" role="status" aria-live="polite" data-form-status></p>
+</form>
+
+<script>
+  import { withBase } from '../lib/url';
+
+  function captureUtm() {
+    const params = new URLSearchParams(window.location.search);
+    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    let hasAny = false;
+    keys.forEach((key) => {
+      const value = params.get(key);
+      if (value) {
+        sessionStorage.setItem(key, value);
+        hasAny = true;
+      }
+    });
+    return hasAny;
+  }
+
+  function formatPhone(raw: string) {
+    let digits = raw.replace(/\D/g, '');
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (digits && !digits.startsWith('7')) digits = '7' + digits;
+    digits = digits.slice(0, 11);
+    if (!digits) return '';
+    let result = '+7';
+    if (digits.length > 1) result += ' (' + digits.slice(1, 4);
+    if (digits.length >= 4) result += ') ' + digits.slice(4, 7);
+    if (digits.length >= 7) result += '-' + digits.slice(7, 9);
+    if (digits.length >= 9) result += '-' + digits.slice(9, 11);
+    return result;
+  }
+
+  function setError(form: HTMLFormElement, field: string, message: string) {
+    const el = form.querySelector(`[data-error-for="${field}"]`);
+    if (el) el.textContent = message;
+    const input = form.querySelector(`[name="${field}"]`) as HTMLElement | null;
+    input?.setAttribute('aria-invalid', message ? 'true' : 'false');
+  }
+
+  function initForm(form: HTMLFormElement) {
+    captureUtm();
+
+    const phoneInput = form.querySelector('input[name="phone"]') as HTMLInputElement | null;
+    phoneInput?.addEventListener('input', () => {
+      phoneInput.value = formatPhone(phoneInput.value);
+    });
+
+    const statusEl = form.querySelector('[data-form-status]') as HTMLElement | null;
+    const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nameInput = form.querySelector('input[name="name"]') as HTMLInputElement;
+      const consentInput = form.querySelector('input[name="consent"]') as HTMLInputElement;
+      const honeypot = form.querySelector('input[name="website"]') as HTMLInputElement;
+      const photosInput = form.querySelector('input[name="photos[]"]') as HTMLInputElement | null;
+
+      setError(form, 'name', '');
+      setError(form, 'phone', '');
+      setError(form, 'photos', '');
+
+      let valid = true;
+
+      if (!nameInput.value.trim() || nameInput.value.trim().length < 2) {
+        setError(form, 'name', 'Укажите ваше имя');
+        valid = false;
+      }
+
+      const digits = (phoneInput?.value ?? '').replace(/\D/g, '');
+      if (digits.length !== 11) {
+        setError(form, 'phone', 'Укажите корректный номер телефона');
+        valid = false;
+      }
+
+      if (photosInput?.files?.length) {
+        if (photosInput.files.length > 5) {
+          setError(form, 'photos', 'Можно приложить не более 5 фото');
+          valid = false;
+        }
+        let totalSize = 0;
+        for (const file of Array.from(photosInput.files)) totalSize += file.size;
+        if (totalSize > 10 * 1024 * 1024) {
+          setError(form, 'photos', 'Суммарный размер фото не должен превышать 10 МБ');
+          valid = false;
+        }
+      }
+
+      if (!consentInput.checked) {
+        if (statusEl) {
+          statusEl.textContent = 'Необходимо согласие на обработку персональных данных';
+          statusEl.setAttribute('data-state', 'error');
+        }
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      // Honeypot: бот заполнил скрытое поле — молча "успех", ничего не отправляем.
+      if (honeypot?.value) {
+        window.location.href = withBase('/spasibo/');
+        return;
+      }
+
+      const setField = (name: string, value: string) => {
+        const el = form.querySelector(`[data-field="${name}"]`) as HTMLInputElement | null;
+        if (el) el.value = value;
+      };
+
+      setField('source_page', window.location.pathname);
+      setField('rendered_at', String(form.dataset.renderedAt ?? Date.now()));
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach((key) => {
+        setField(key, sessionStorage.getItem(key) ?? '');
+      });
+
+      submitBtn?.setAttribute('disabled', 'true');
+      if (statusEl) {
+        statusEl.textContent = 'Отправляем заявку…';
+        statusEl.setAttribute('data-state', 'sending');
+      }
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        });
+        const data = await res.json().catch(() => ({ ok: false }));
+
+        if (res.ok && data.ok) {
+          window.location.href = withBase('/spasibo/');
+          return;
+        }
+
+        if (statusEl) {
+          statusEl.textContent = data.message || 'Не удалось отправить заявку. Попробуйте позвонить нам напрямую.';
+          statusEl.setAttribute('data-state', 'error');
+        }
+      } catch {
+        if (statusEl) {
+          statusEl.textContent = 'Не удалось отправить заявку. Проверьте соединение или позвоните нам напрямую.';
+          statusEl.setAttribute('data-state', 'error');
+        }
+      } finally {
+        submitBtn?.removeAttribute('disabled');
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
+    form.dataset.renderedAt = String(Date.now());
+    initForm(form);
+  });
+</script>
+
