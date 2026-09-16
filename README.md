@@ -98,6 +98,14 @@ public/
 
 ## Деплой
 
+### GitHub Pages (превью, без PHP)
+
+Репозиторий: https://github.com/mihailburmasov/art-lider · Live-превью: **https://mihailburmasov.github.io/art-lider/**
+
+`.github/workflows/deploy-pages.yml` собирает сайт при каждом push в `main` и публикует на GitHub Pages. Т.к. Pages отдаёт сайт не с корня домена, а по пути `/art-lider/`, сборка для Pages использует `ASTRO_BASE=/art-lider/` — все внутренние ссылки, favicon, шрифты автоматически получают этот префикс (см. `src/lib/url.ts`, `withBase()`). Для обычной сборки (`npm run build` без этой переменной) base остаётся `/` — ссылки рассчитаны на прод-домен из `src/config/site.ts`.
+
+**Важно:** на GitHub Pages нет PHP, поэтому форма заявки (`public/api/send.php`) там не работает — это статическое превью вёрстки и контента, а не рабочая версия для клиентов. Рабочий продакшен — только вариант А/Б ниже, на хостинге с PHP.
+
 ### Вариант А: обычный хостинг с PHP (Beget, Timeweb и т. п.) по FTP
 
 1. `npm run build` — соберёт сайт в `dist/`.
