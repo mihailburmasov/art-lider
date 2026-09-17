@@ -40,16 +40,21 @@ const guarantees = [
             {/* TODO: дополнить историю компании — дата основания, количество выполненных объектов и т.п. */}
           </p>
         </div>
-        <video
-          class="about-video"
-          poster={poster.src}
-          controls
-          preload="none"
-          playsinline
-          aria-label="Видео об офисе и компании Арт Лидер"
-        >
-          <source src={withBase('/video/o-kompanii.mp4')} type="video/mp4" />
-        </video>
+        <figure style="margin:0;">
+          <video
+            class="about-video"
+            poster={poster.src}
+            controls
+            preload="none"
+            playsinline
+            aria-label="Видео об офисе и компании Арт Лидер"
+          >
+            <source src={withBase('/video/o-kompanii.mp4')} type="video/mp4" />
+          </video>
+          <figcaption style="margin-top:8px;font-size:0.85rem;color:var(--color-gray-500);text-align:center;">
+            Директор компании «{site.companyName}» — {site.director}
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -79,6 +84,7 @@ const guarantees = [
         <h2>Юридическая информация</h2>
         <ul style="display:grid;gap:8px;">
           <li>ИП {site.legal.fullName}</li>
+          <li>Директор: {site.director}</li>
           <li>ИНН {site.legal.inn}</li>
           <li>ОГРНИП {site.legal.ogrnip}</li>
           <li>Адрес: {site.address.full}</li>

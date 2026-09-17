@@ -5,6 +5,7 @@ export const site = {
   companyName: 'Арт Лидер',
   legalBrand: 'АРТ·ЛИДЕР',
   tagline: 'Ремонт квартир и офисов',
+  director: 'Артур Гимадиев',
 
   // TODO: заменить на боевой домен перед запуском
   url: 'https://art-lider-remont.ru',
