@@ -75,7 +75,7 @@ export const site = {
   googleVerification: '', // TODO: код подтверждения Google Search Console
   yandexSmartCaptchaKey: '', // TODO: ключ Яндекс SmartCaptcha (опционально)
 
-  themeColor: '#E11F23',
+  themeColor: '#1f2328',
 
   socialImage: '/og-image.jpg',
 } as const;

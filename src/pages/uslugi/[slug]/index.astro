@@ -67,7 +67,7 @@ const relatedServices = service.related.map((slug) => getServiceBySlug(slug)).fi
           <ul style="display:grid;gap:10px;">
             {service.whatIncluded.map((item) => (
               <li style="display:flex;gap:10px;align-items:flex-start;">
-                <Icon name="check" style="width:20px;height:20px;color:var(--color-primary);flex-shrink:0;margin-top:2px;" />
+                <Icon name="check" style="width:20px;height:20px;color:var(--color-link);flex-shrink:0;margin-top:2px;" />
                 <span>{item}</span>
               </li>
             ))}
