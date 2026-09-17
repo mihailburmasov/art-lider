@@ -60,15 +60,6 @@ const { id, compact = false, title = 'Оставить заявку' } = Astro.p
     <textarea id={`${id}-comment`} name="comment" placeholder="Расскажите о задаче: тип объекта, площадь, желаемые сроки"></textarea>
   </div>
 
-  {!compact && (
-    <div class="field">
-      <label for={`${id}-photos`}>Фото помещения (необязательно)</label>
-      <input type="file" id={`${id}-photos`} name="photos[]" accept="image/*" multiple />
-      <span class="file-hint">До 5 фото, не более 10 МБ суммарно</span>
-      <span class="field-error" data-error-for="photos"></span>
-    </div>
-  )}
-
   <label class="checkbox-field">
     <input type="checkbox" name="consent" required />
     <span>Я даю согласие на <a href={withBase('/soglasie/')} target="_blank">обработку персональных данных</a> *</span>
@@ -146,11 +137,9 @@ const { id, compact = false, title = 'Оставить заявку' } = Astro.p
       const nameInput = form.querySelector('input[name="name"]') as HTMLInputElement;
       const consentInput = form.querySelector('input[name="consent"]') as HTMLInputElement;
       const honeypot = form.querySelector('input[name="website"]') as HTMLInputElement;
-      const photosInput = form.querySelector('input[name="photos[]"]') as HTMLInputElement | null;
 
       setError(form, 'name', '');
       setError(form, 'phone', '');
-      setError(form, 'photos', '');
 
       let valid = true;
 
@@ -163,19 +152,6 @@ const { id, compact = false, title = 'Оставить заявку' } = Astro.p
       if (digits.length !== 11) {
         setError(form, 'phone', 'Укажите корректный номер телефона');
         valid = false;
-      }
-
-      if (photosInput?.files?.length) {
-        if (photosInput.files.length > 5) {
-          setError(form, 'photos', 'Можно приложить не более 5 фото');
-          valid = false;
-        }
-        let totalSize = 0;
-        for (const file of Array.from(photosInput.files)) totalSize += file.size;
-        if (totalSize > 10 * 1024 * 1024) {
-          setError(form, 'photos', 'Суммарный размер фото не должен превышать 10 МБ');
-          valid = false;
-        }
       }
 
       if (!consentInput.checked) {
