@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
+import heroStock from '../assets/brand/hero-stock.jpg';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
@@ -24,7 +25,6 @@ const heroProject = allProjects
   .filter((p) => p.data.beforeAfter?.length)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
 
-const heroCover = allProjects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0]?.data.cover;
 
 const advantages = [
   { icon: 'home', title: 'Свой офис в Лысьве', text: 'Приходите на консультацию очно — ул. Федосеева, 37.' },
@@ -52,7 +52,7 @@ const steps = [
 >
   <section class="hero">
     <div class="hero__bg">
-      {heroCover && <Image src={heroCover} alt="Выполненный ремонт компании Арт Лидер" width={1600} loading="eager" fetchpriority="high" />}
+      <Image src={heroStock} alt="Мастера компании Арт Лидер выполняют отделочные работы" width={1920} loading="eager" fetchpriority="high" />
     </div>
     <div class="hero__overlay"></div>
     <div class="container">
