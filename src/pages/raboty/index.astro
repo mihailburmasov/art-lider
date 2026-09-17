@@ -5,6 +5,7 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { services } from '../../data/services';
 import { site } from '../../config/site';
+import Icon from '../../components/Icon.astro';
 
 const allProjects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
@@ -25,6 +26,11 @@ const filterServices = services.filter((s) => usedServiceSlugs.has(s.slug));
         <span class="eyebrow">Портфолио</span>
         <h1>Наши работы</h1>
         <p class="lead">Реальные объекты, которые мы отремонтировали в Лысьве и Чусовом. У части объектов — слайдер «до/после».</p>
+        <a href={site.messengers.vk} target="_blank" rel="noopener" class="vk-callout">
+          <Icon name="vk" style="width:20px;height:20px" />
+          <span>Здесь — лишь часть наших объектов. Все работы смотрите в группе ВКонтакте</span>
+          <Icon name="arrow" style="width:16px;height:16px" />
+        </a>
       </div>
 
       <div class="filters" role="group" aria-label="Фильтр по виду работ" id="project-filters">

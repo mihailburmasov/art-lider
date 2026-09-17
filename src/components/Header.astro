@@ -1,18 +1,16 @@
 ---
+import { Image } from 'astro:assets';
 import { site } from '../config/site';
 import { services } from '../data/services';
 import Icon from './Icon.astro';
+import logoMark from '../assets/brand/logo-mark.png';
 import { withBase } from '../lib/url';
 ---
 
 <header class="site-header">
   <div class="container site-header__bar">
     <a href={withBase('/')} class="logo" aria-label={`${site.companyName} — на главную`}>
-      <Icon name="roller" class="logo__mark" style="width:26px;height:26px" />
-      <span>
-        {site.legalBrand}
-        <span class="logo__sub">{site.tagline}</span>
-      </span>
+      <Image src={logoMark} alt={`${site.legalBrand} — ${site.tagline}`} height={38} />
     </a>
 
     <nav class="main-nav" aria-label="Основная навигация">
