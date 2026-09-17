@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageBanner from '../../components/PageBanner.astro';
 import { services } from '../../data/services';
 import { site } from '../../config/site';
 import { withBase } from '../../lib/url';
+import bannerImg from '../../assets/banners/ceny.jpg';
 ---
 
 <BaseLayout
@@ -13,17 +15,17 @@ import { withBase } from '../../lib/url';
 >
   <Breadcrumbs items={[{ name: 'Цены', path: '/ceny/' }]} />
 
-  <section style="padding-top:8px;">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Прайс-лист</span>
-        <h1>Цены</h1>
-        <p class="lead">
-          Ниже — ориентировочная стоимость по видам работ. Точная смета составляется после бесплатного замера объекта в
-          {site.address.city} или {site.areaServed[1]} и зависит от объёма работ, материалов и состояния помещения.
-        </p>
-      </div>
+  <PageBanner image={bannerImg} alt="План ремонта и смета">
+    <span class="eyebrow">Прайс-лист</span>
+    <h1>Цены</h1>
+    <p class="lead">
+      Ниже — ориентировочная стоимость по видам работ. Точная смета составляется после бесплатного замера объекта
+      в {site.address.city} или {site.areaServed[1]} и зависит от объёма работ, материалов и состояния помещения.
+    </p>
+  </PageBanner>
 
+  <section style="padding-top:28px;">
+    <div class="container">
       <div style="display:grid;gap:40px;">
         {services.map((s) => (
           <div>

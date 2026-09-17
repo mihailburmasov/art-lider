@@ -2,8 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
+import PageBanner from '../../components/PageBanner.astro';
 import { services } from '../../data/services';
 import { site } from '../../config/site';
+import bannerImg from '../../assets/banners/uslugi-index.jpg';
 ---
 
 <BaseLayout
@@ -13,13 +15,14 @@ import { site } from '../../config/site';
 >
   <Breadcrumbs items={[{ name: 'Услуги', path: '/uslugi/' }]} />
 
-  <section style="padding-top:8px;">
+  <PageBanner image={bannerImg} alt="Инструменты для ремонта квартир и офисов">
+    <span class="eyebrow">Что мы делаем</span>
+    <h1>Услуги</h1>
+    <p class="lead">Выполняем ремонт квартир и офисов в Лысьве и Чусовом — полным циклом или по отдельным видам работ.</p>
+  </PageBanner>
+
+  <section>
     <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Что мы делаем</span>
-        <h1>Услуги</h1>
-        <p class="lead">Выполняем ремонт квартир и офисов в Лысьве и Чусовом — полным циклом или по отдельным видам работ.</p>
-      </div>
       <div class="grid grid-4">
         {services.map((s) => <ServiceCard service={s} />)}
       </div>

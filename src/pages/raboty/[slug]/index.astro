@@ -6,6 +6,7 @@ import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import BeforeAfter from '../../../components/BeforeAfter.astro';
 import Gallery from '../../../components/Gallery.astro';
 import ProjectCard from '../../../components/ProjectCard.astro';
+import PageBanner from '../../../components/PageBanner.astro';
 import JsonLd from '../../../components/JsonLd.astro';
 import { getServiceBySlug } from '../../../data/services';
 import { site } from '../../../config/site';
@@ -47,11 +48,14 @@ const jsonLd = {
 
   <Breadcrumbs items={[{ name: 'Наши работы', path: '/raboty/' }, { name: title, path: `/raboty/${project.id}/` }]} />
 
-  <section style="padding-top:8px;">
+  <PageBanner image={cover} alt={title}>
+    <span class="eyebrow">{city} · {objectType}</span>
+    <h1>{title}</h1>
+  </PageBanner>
+
+  <section style="padding-top:28px;">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">{city} · {objectType}</span>
-        <h1>{title}</h1>
         <div class="stat-row">
           {area && <div><strong>{area} м²</strong><span>Площадь</span></div>}
           {duration && <div><strong>{duration}</strong><span>Срок работ</span></div>}

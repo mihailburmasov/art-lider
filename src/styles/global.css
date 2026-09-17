@@ -605,6 +605,60 @@ textarea:focus-visible,
   margin-top: 28px;
 }
 
+/* ===== Page banner (photo strip on inner pages) ===== */
+.page-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: clamp(120px, 15vw, 190px);
+  overflow: hidden;
+  color: var(--color-white);
+}
+
+.page-banner__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.page-banner__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.page-banner__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 12, 12, 0.72) 0%, rgba(20, 12, 12, 0.8) 100%);
+  z-index: 1;
+}
+
+.page-banner .container {
+  position: relative;
+  z-index: 2;
+}
+
+.page-banner__content {
+  padding-block: 18px;
+  max-width: 720px;
+}
+
+.page-banner__content .eyebrow {
+  color: var(--color-accent);
+}
+
+.page-banner__content h1 {
+  color: var(--color-white);
+  font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.3rem);
+  margin-bottom: 0.2em;
+}
+
+.page-banner__content .lead {
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 0;
+}
+
 /* ===== Advantages ===== */
 .advantage-card {
   text-align: left;

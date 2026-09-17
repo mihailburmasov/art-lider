@@ -1,8 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
+import type { ImageMetadata } from 'astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import ProjectCard from '../../../components/ProjectCard.astro';
+import PageBanner from '../../../components/PageBanner.astro';
 import FAQ from '../../../components/FAQ.astro';
 import ContactForm from '../../../components/ContactForm.astro';
 import JsonLd from '../../../components/JsonLd.astro';
@@ -18,6 +20,9 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 const service = getServiceBySlug(slug as string)!;
+
+const bannerImages = import.meta.glob<{ default: ImageMetadata }>('../../../assets/banners/*.jpg', { eager: true });
+const bannerImg = bannerImages[`../../../assets/banners/${service.slug}.jpg`].default;
 
 const allProjects = await getCollection('projects');
 const relatedProjects = allProjects
@@ -39,18 +44,19 @@ const relatedServices = service.related.map((slug) => getServiceBySlug(slug)).fi
 
   <Breadcrumbs items={[{ name: 'Услуги', path: '/uslugi/' }, { name: service.shortTitle, path: `/uslugi/${service.slug}/` }]} />
 
-  <section style="padding-top:8px;">
+  <PageBanner image={bannerImg} alt={service.title}>
+    <span class="eyebrow">Услуга</span>
+    <h1>{service.title} в {site.address.city} и Чусовом</h1>
+    <p class="lead">{service.summary}</p>
+  </PageBanner>
+
+  <section style="padding-top:28px;">
     <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Услуга</span>
-        <h1>{service.title} в {site.address.city} и Чусовом</h1>
-        <p class="lead">{service.summary}</p>
-        <div class="hero__cta" style="margin-top:20px;">
-          <button type="button" class="btn btn-primary" data-open-callback-modal>Рассчитать стоимость</button>
-          <a class="btn btn-ghost" href={site.phone.href}>
-            <Icon name="phone" style="width:18px;height:18px" /> {site.phone.display}
-          </a>
-        </div>
+      <div class="hero__cta" style="margin-bottom:28px;">
+        <button type="button" class="btn btn-primary" data-open-callback-modal>Рассчитать стоимость</button>
+        <a class="btn btn-ghost" href={site.phone.href}>
+          <Icon name="phone" style="width:18px;height:18px" /> {site.phone.display}
+        </a>
       </div>
 
       <div class="two-col" style="align-items:start;">

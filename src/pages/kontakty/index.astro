@@ -2,8 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ContactForm from '../../components/ContactForm.astro';
+import PageBanner from '../../components/PageBanner.astro';
 import Icon from '../../components/Icon.astro';
 import { site } from '../../config/site';
+import bannerImg from '../../assets/banners/kontakty.jpg';
 
 const mapQuery = encodeURIComponent(site.address.full);
 const mapSrc = `https://yandex.ru/map-widget/v1/?text=${mapQuery}&z=16`;
@@ -16,13 +18,13 @@ const mapSrc = `https://yandex.ru/map-widget/v1/?text=${mapQuery}&z=16`;
 >
   <Breadcrumbs items={[{ name: 'Контакты', path: '/kontakty/' }]} />
 
-  <section style="padding-top:8px;">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Свяжитесь с нами</span>
-        <h1>Контакты</h1>
-      </div>
+  <PageBanner image={bannerImg} alt="Консультация по ремонту">
+    <span class="eyebrow">Свяжитесь с нами</span>
+    <h1>Контакты</h1>
+  </PageBanner>
 
+  <section style="padding-top:28px;">
+    <div class="container">
       <div class="two-col" style="align-items:start;">
         <div>
           <ul style="display:grid;gap:18px;margin-bottom:28px;">

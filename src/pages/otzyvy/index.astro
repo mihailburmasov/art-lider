@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageBanner from '../../components/PageBanner.astro';
 import { reviews } from '../../data/reviews';
 import { site } from '../../config/site';
+import bannerImg from '../../assets/banners/otzyvy.jpg';
 ---
 
 <BaseLayout
@@ -12,14 +14,14 @@ import { site } from '../../config/site';
 >
   <Breadcrumbs items={[{ name: 'Отзывы', path: '/otzyvy/' }]} />
 
-  <section style="padding-top:8px;">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Отзывы</span>
-        <h1>Что говорят клиенты</h1>
-        <p class="lead">Больше отзывов — в нашей группе ВКонтакте, где их могут оставить реальные клиенты.</p>
-      </div>
+  <PageBanner image={bannerImg} alt="Довольный клиент пожимает руку">
+    <span class="eyebrow">Отзывы</span>
+    <h1>Что говорят клиенты</h1>
+    <p class="lead">Больше отзывов — в нашей группе ВКонтакте, где их могут оставить реальные клиенты.</p>
+  </PageBanner>
 
+  <section style="padding-top:28px;">
+    <div class="container">
       <div class="grid grid-3">
         {reviews.map((r) => (
           <div class="card review-card">

@@ -3,9 +3,11 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import PageBanner from '../../components/PageBanner.astro';
 import { services } from '../../data/services';
 import { site } from '../../config/site';
 import Icon from '../../components/Icon.astro';
+import bannerImg from '../../assets/banners/raboty-index.jpg';
 
 const allProjects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
@@ -20,18 +22,19 @@ const filterServices = services.filter((s) => usedServiceSlugs.has(s.slug));
 >
   <Breadcrumbs items={[{ name: 'Наши работы', path: '/raboty/' }]} />
 
-  <section style="padding-top:8px;">
+  <PageBanner image={bannerImg} alt="Ремонт в процессе: инструменты и материалы">
+    <span class="eyebrow">Портфолио</span>
+    <h1>Наши работы</h1>
+    <p class="lead">Реальные объекты, которые мы отремонтировали в Лысьве и Чусовом. У части объектов — слайдер «до/после».</p>
+  </PageBanner>
+
+  <section style="padding-top:28px;">
     <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Портфолио</span>
-        <h1>Наши работы</h1>
-        <p class="lead">Реальные объекты, которые мы отремонтировали в Лысьве и Чусовом. У части объектов — слайдер «до/после».</p>
-        <a href={site.messengers.vk} target="_blank" rel="noopener" class="vk-callout">
-          <Icon name="vk" style="width:20px;height:20px" />
-          <span>Здесь — лишь часть наших объектов. Все работы смотрите в группе ВКонтакте</span>
-          <Icon name="arrow" style="width:16px;height:16px" />
-        </a>
-      </div>
+      <a href={site.messengers.vk} target="_blank" rel="noopener" class="vk-callout" style="margin-top:0;margin-bottom:28px;">
+        <Icon name="vk" style="width:20px;height:20px" />
+        <span>Здесь — лишь часть наших объектов. Все работы смотрите в группе ВКонтакте</span>
+        <Icon name="arrow" style="width:16px;height:16px" />
+      </a>
 
       <div class="filters" role="group" aria-label="Фильтр по виду работ" id="project-filters">
         <button type="button" class="filter-btn" aria-pressed="true" data-filter="all">Все объекты</button>
