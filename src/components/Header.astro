@@ -75,6 +75,11 @@ import { withBase } from '../lib/url';
 </header>
 
 <script>
+  const header = document.querySelector('.site-header');
+  const updateScrolled = () => header?.classList.toggle('scrolled', window.scrollY > 40);
+  updateScrolled();
+  window.addEventListener('scroll', updateScrolled, { passive: true });
+
   const burger = document.getElementById('burger-toggle');
   const nav = document.getElementById('mobile-nav');
 
