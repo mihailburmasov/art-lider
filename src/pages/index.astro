@@ -21,9 +21,11 @@ const featured = allProjects
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 6);
 
-const heroProject = allProjects
-  .filter((p) => p.data.beforeAfter?.length)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
+const heroProject =
+  allProjects.find((p) => p.id === 'vannaya-do-posle') ??
+  allProjects
+    .filter((p) => p.data.beforeAfter?.length)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
 
 
 const advantages = [
@@ -33,6 +35,13 @@ const advantages = [
   { icon: 'shield', title: 'Гарантия на работы', text: 'Гарантийные обязательства закрепляем в договоре.' },
   { icon: 'check', title: 'Работы «под ключ»', text: 'От черновой отделки до финальной уборки — без лишних подрядчиков.' },
   { icon: 'star', title: 'Свои бригады', text: 'Электрики, сантехники, отделочники — в штате компании.' },
+];
+
+const heroCards = [
+  { icon: 'clock', title: 'Сроки', text: 'Зафиксированы в договоре' },
+  { icon: 'document', title: 'Смета', text: 'Не меняется в процессе работ' },
+  { icon: 'star', title: 'Свои бригады', text: 'Без сторонних подрядчиков' },
+  { icon: 'shield', title: 'Гарантия', text: 'Закреплена в договоре' },
 ];
 
 const steps = [
@@ -56,15 +65,53 @@ const steps = [
     </div>
     <div class="hero__overlay"></div>
     <div class="container">
-      <div class="hero__content">
-        <span class="eyebrow hero__eyebrow">Арт Лидер · Лысьва и Чусовой</span>
-        <h1>Ремонт под ключ в Лысьве и Чусовом — по цене, которая не вырастет</h1>
-        <p class="lead">Фиксируем смету в договоре до начала работ. Свои бригады делают всё: электрику, сантехнику, потолки и отделку. Замер бесплатный.</p>
-        <div class="hero__cta">
-          <button type="button" class="btn btn-accent" data-open-callback-modal>Рассчитать стоимость</button>
-          <a class="btn btn-outline" href={site.phone.href}>
-            <Icon name="phone" style="width:18px;height:18px" /> Позвонить
-          </a>
+      <div class="hero__layout">
+        <div class="hero__content">
+          <span class="hero__badge">
+            <Icon name="mapPin" style="width:14px;height:14px" />
+            {site.address.city} и {site.areaServed[1]}
+          </span>
+          <h1 class="hero__title">
+            <span class="hero__title-accent">Ремонт под ключ</span>
+            квартир и домов
+          </h1>
+          <p class="hero__subtitle">Делаем ремонт лёгким!</p>
+          <p class="lead">Фиксируем смету в договоре до начала работ. Свои бригады делают всё: электрику, сантехнику, потолки и отделку. Замер бесплатный.</p>
+          <div class="hero__cta">
+            <button type="button" class="btn btn-accent" data-open-callback-modal>Рассчитать стоимость</button>
+            <a class="btn btn-outline" href={site.phone.href}>
+              <Icon name="phone" style="width:18px;height:18px" /> Позвонить
+            </a>
+          </div>
+        </div>
+
+        <div class="hero__cards">
+          {heroCards.map((c) => (
+            <div class="hero-card">
+              <Icon name={c.icon} class="hero-card__icon" style="width:18px;height:18px" />
+              <span class="hero-card__title">{c.title}</span>
+              <span class="hero-card__text">{c.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="hero__stats">
+        <div class="hero-stat">
+          <strong>{site.stats.yearsOnMarket}</strong>
+          <span>лет на рынке</span>
+        </div>
+        <div class="hero-stat">
+          <strong>{site.stats.objectsCompleted}</strong>
+          <span>сданных объектов</span>
+        </div>
+        <div class="hero-stat">
+          <strong>{site.stats.staffCount}</strong>
+          <span>мастеров в штате</span>
+        </div>
+        <div class="hero-stat">
+          <strong>{site.stats.warrantyYears} года</strong>
+          <span>гарантия на работы</span>
         </div>
       </div>
     </div>

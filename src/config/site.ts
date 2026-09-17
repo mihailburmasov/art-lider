@@ -40,6 +40,14 @@ export const site = {
 
   vkSubscribers: '1,8 тыс.',
 
+  // Цифры для блока статистики на первом экране
+  stats: {
+    yearsOnMarket: 10,
+    objectsCompleted: '50+',
+    staffCount: '30+',
+    warrantyYears: 2,
+  },
+
   workingHours: {
     weekdays: '10:00–18:00',
     saturday: '10:00–17:00',
