@@ -1556,10 +1556,14 @@ textarea:focus-visible,
 
 .about-video {
   width: 100%;
+  max-width: 380px;
+  max-height: 65vh;
   aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: var(--radius);
   background: var(--color-dark);
+  display: block;
+  margin-inline: auto;
 }
 
 .two-col {
