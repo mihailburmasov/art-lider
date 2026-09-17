@@ -54,22 +54,19 @@ const year = new Date().getFullYear();
       </div>
     </div>
 
-    <div class="footer-bottom">
-      <span>
-        © {year} {site.companyName}. ИП {site.legal.fullName} · ИНН {site.legal.inn} · ОГРНИП {site.legal.ogrnip}
-      </span>
-      <span>
-        <a href={withBase('/politika-konfidencialnosti/')}>Политика конфиденциальности</a>
-        {' · '}
-        <a href={withBase('/soglasie/')}>Согласие на обработку персональных данных</a>
-        {' · '}
-        <a
-          class="footer-credit"
-          href="https://sitomika.ru/?utm_source=art-lider-remont&utm_medium=footer&utm_campaign=client-sites"
-          target="_blank"
-          rel="noopener"
-        >Разработано в sitomika.ru</a>
-      </span>
-    </div>
+    <p class="footer-bottom">
+      © {year} {site.companyName}. ИП {site.legal.fullName} · ИНН {site.legal.inn} · ОГРНИП {site.legal.ogrnip}
+      {' · '}
+      <a href={withBase('/politika-konfidencialnosti/')}>Политика конфиденциальности</a>
+      {' · '}
+      <a href={withBase('/soglasie/')}>Согласие на обработку персональных данных</a>
+      {' · '}
+      <a
+        class="footer-credit"
+        href="https://sitomika.ru/?utm_source=art-lider-remont&utm_medium=footer&utm_campaign=client-sites"
+        target="_blank"
+        rel="noopener"
+      >Разработано в sitomika.ru</a>
+    </p>
   </div>
 </footer>

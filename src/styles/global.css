@@ -1285,11 +1285,9 @@ textarea:focus-visible,
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   margin-top: 40px;
   padding-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 20px;
-  justify-content: space-between;
+  margin-bottom: 0;
   font-size: 0.8rem;
+  line-height: 1.7;
   color: rgba(255, 255, 255, 0.55);
 }
 
@@ -1554,6 +1552,14 @@ textarea:focus-visible,
   background: var(--color-gray-200);
   border: none;
   margin-block: 8px;
+}
+
+.about-video {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--color-dark);
 }
 
 .two-col {

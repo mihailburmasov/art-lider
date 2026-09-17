@@ -1,12 +1,13 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Icon from '../../components/Icon.astro';
 import { site } from '../../config/site';
 import { withBase } from '../../lib/url';
-import ofisFasad from '../../assets/brand/ofis-fasad.jpg';
-import rezhimRaboty from '../../assets/brand/rezhim-raboty.jpg';
+import posterSrc from '../../assets/brand/o-kompanii-poster.jpg';
+
+const poster = await getImage({ src: posterSrc, width: 720 });
 
 const guarantees = [
   { icon: 'document', title: 'Договор на все виды работ', text: 'Фиксируем объём, сроки и стоимость до начала ремонта.' },
@@ -39,7 +40,16 @@ const guarantees = [
             {/* TODO: дополнить историю компании — дата основания, количество выполненных объектов и т.п. */}
           </p>
         </div>
-        <Image src={ofisFasad} alt="Офис компании Арт Лидер в Лысьве, ул. Федосеева, 37" width={700} loading="eager" />
+        <video
+          class="about-video"
+          poster={poster.src}
+          controls
+          preload="none"
+          playsinline
+          aria-label="Видео об офисе и компании Арт Лидер"
+        >
+          <source src={withBase('/video/o-kompanii.mp4')} type="video/mp4" />
+        </video>
       </div>
     </div>
   </section>
@@ -64,23 +74,20 @@ const guarantees = [
 
   <section>
     <div class="container">
-      <div class="two-col">
-        <Image src={rezhimRaboty} alt="Режим работы офиса Арт Лидер: Пн-Пт 10-18, Сб 10-17" width={600} loading="lazy" />
-        <div>
-          <span class="eyebrow">Реквизиты</span>
-          <h2>Юридическая информация</h2>
-          <ul style="display:grid;gap:8px;">
-            <li>ИП {site.legal.fullName}</li>
-            <li>ИНН {site.legal.inn}</li>
-            <li>ОГРНИП {site.legal.ogrnip}</li>
-            <li>Адрес: {site.address.full}</li>
-            <li>Режим работы: {site.workingHours.text}</li>
-          </ul>
-          <p class="lead" style="font-size:0.85rem;margin-top:14px;">
-            См. также <a href={withBase('/politika-konfidencialnosti/')}>политику конфиденциальности</a> и
-            <a href={withBase('/soglasie/')}>согласие на обработку персональных данных</a>.
-          </p>
-        </div>
+      <div style="max-width:640px;">
+        <span class="eyebrow">Реквизиты</span>
+        <h2>Юридическая информация</h2>
+        <ul style="display:grid;gap:8px;">
+          <li>ИП {site.legal.fullName}</li>
+          <li>ИНН {site.legal.inn}</li>
+          <li>ОГРНИП {site.legal.ogrnip}</li>
+          <li>Адрес: {site.address.full}</li>
+          <li>Режим работы: {site.workingHours.text}</li>
+        </ul>
+        <p class="lead" style="font-size:0.85rem;margin-top:14px;">
+          См. также <a href={withBase('/politika-konfidencialnosti/')}>политику конфиденциальности</a> и
+          <a href={withBase('/soglasie/')}>согласие на обработку персональных данных</a>.
+        </p>
       </div>
     </div>
   </section>
