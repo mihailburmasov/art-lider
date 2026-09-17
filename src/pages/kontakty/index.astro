@@ -1,11 +1,9 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ContactForm from '../../components/ContactForm.astro';
 import Icon from '../../components/Icon.astro';
 import { site } from '../../config/site';
-import ofisFasad from '../../assets/brand/ofis-fasad.jpg';
 
 const mapQuery = encodeURIComponent(site.address.full);
 const mapSrc = `https://yandex.ru/map-widget/v1/?text=${mapQuery}&z=16`;
@@ -48,8 +46,6 @@ const mapSrc = `https://yandex.ru/map-widget/v1/?text=${mapQuery}&z=16`;
             <a class="btn btn-ghost btn-sm" href={site.messengers.max}>MAX</a>
             <a class="btn btn-ghost btn-sm" href={site.messengers.vk} target="_blank" rel="noopener">ВКонтакте</a>
           </div>
-
-          <Image src={ofisFasad} alt="Как нас найти: офис Арт Лидер, вывеска на фасаде, ул. Федосеева 37" width={600} loading="lazy" />
         </div>
 
         <div class="card">
