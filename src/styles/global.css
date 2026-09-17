@@ -1285,7 +1285,10 @@ textarea:focus-visible,
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   margin-top: 40px;
   padding-top: 20px;
-  margin-bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  justify-content: space-between;
   font-size: 0.8rem;
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.55);

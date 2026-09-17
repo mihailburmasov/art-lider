@@ -54,17 +54,18 @@ const year = new Date().getFullYear();
       </div>
     </div>
 
-    <p class="footer-bottom">
-      © {year} {site.companyName}.
-      {' · '}
-      <a href={withBase('/politika-konfidencialnosti/')}>Политика конфиденциальности</a>
-      {' · '}
-      <a
-        class="footer-credit"
-        href="https://sitomika.ru/?utm_source=art-lider-remont&utm_medium=footer&utm_campaign=client-sites"
-        target="_blank"
-        rel="noopener"
-      >Разработано в sitomika.ru</a>
-    </p>
+    <div class="footer-bottom">
+      <span>© {year} {site.companyName}.</span>
+      <span>
+        <a href={withBase('/politika-konfidencialnosti/')}>Политика конфиденциальности</a>
+        {' · '}
+        <a
+          class="footer-credit"
+          href="https://sitomika.ru/?utm_source=art-lider-remont&utm_medium=footer&utm_campaign=client-sites"
+          target="_blank"
+          rel="noopener"
+        >Разработано в sitomika.ru</a>
+      </span>
+    </div>
   </div>
 </footer>

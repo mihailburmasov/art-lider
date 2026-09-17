@@ -24,7 +24,7 @@ const { id, compact = false, title = 'Оставить заявку' } = Astro.p
   <div class="form-grid form-grid--2col">
     <div class="field">
       <label for={`${id}-name`}>Имя *</label>
-      <input type="text" id={`${id}-name`} name="name" autocomplete="name" required />
+      <input type="text" id={`${id}-name`} name="name" autocomplete="name" placeholder="Имя" required />
       <span class="field-error" data-error-for="name"></span>
     </div>
     <div class="field">
