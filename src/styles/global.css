@@ -42,8 +42,8 @@
   --texture-venetian: url('../assets/textures/venetian-plaster.webp');
   --texture-microcement: url('../assets/textures/microcement.webp');
 
-  --font-heading: 'Oswald', 'Arial Narrow', sans-serif;
-  --font-body: 'Inter', 'Segoe UI', sans-serif;
+  --font-heading: 'Unbounded', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
 
   --container-width: 1200px;
   --radius: 10px;
@@ -126,23 +126,36 @@ h2,
 h3,
 h4 {
   font-family: var(--font-heading);
-  font-weight: 700;
   text-transform: uppercase;
-  line-height: 1.15;
+  line-height: 1.18;
   margin: 0 0 0.6em;
-  letter-spacing: 0.01em;
+}
+
+/* Unbounded шире Oswald: у h1/h2 плотнее трекинг и держим потяжелее
+   начертание, у h3/h4 — трекинг мягче и вес чуть легче, чтобы мелкий
+   текст не «слипался». */
+h1,
+h2 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h3,
+h4 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 h1 {
-  font-size: clamp(1.9rem, 1.5rem + 2vw, 3.1rem);
+  font-size: clamp(1.8rem, 1.4rem + 1.7vw, 2.7rem);
 }
 
 h2 {
-  font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.3rem);
+  font-size: clamp(1.3rem, 1.05rem + 1.1vw, 2rem);
 }
 
 h3 {
-  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+  font-size: clamp(1.05rem, 0.92rem + 0.5vw, 1.32rem);
 }
 
 p {
@@ -255,15 +268,16 @@ section {
   font-family: var(--font-heading);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  font-size: 0.95rem;
+  letter-spacing: 0;
+  font-size: 0.88rem;
   padding: 14px 28px;
   border-radius: 999px;
   border: 2px solid transparent;
   cursor: pointer;
   transition: background var(--transition), color var(--transition), border-color var(--transition), transform var(--transition);
   min-height: 48px;
-  line-height: 1;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .btn:active {
@@ -313,6 +327,25 @@ section {
   padding: 10px 20px;
   min-height: 40px;
   font-size: 0.85rem;
+}
+
+/* Unbounded шире Oswald — на узких экранах "Оставить заявку" в шапке
+   упирается в бургер, поэтому ниже 1024px (там же, где скрыт .main-nav
+   и виден бургер) кнопку сжимаем сильнее. */
+@media (max-width: 1023px) {
+  .header-actions .btn-sm {
+    padding: 8px 12px;
+    font-size: 0.66rem;
+  }
+}
+
+/* На самых узких экранах даже сжатая кнопка не помещается рядом с широким
+   логотипом и бургером — прячем её здесь, в раскрытом мобильном меню есть
+   точно такая же кнопка «Оставить заявку» на всю ширину. */
+@media (max-width: 499px) {
+  .header-actions .btn-sm {
+    display: none;
+  }
 }
 
 .btn-block {
@@ -603,7 +636,8 @@ textarea:focus-visible,
   display: none;
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 1.02rem;
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
   white-space: nowrap;
 }
 
@@ -752,7 +786,7 @@ textarea:focus-visible,
 }
 
 .hero__content {
-  max-width: 620px;
+  max-width: 680px;
 }
 
 .hero__badge {
@@ -771,7 +805,8 @@ textarea:focus-visible,
 }
 
 .hero__title {
-  font-size: clamp(2.4rem, 1.8rem + 2.85vw, 3.9rem);
+  font-weight: 600;
+  font-size: clamp(1.45rem, 1.05rem + 1.9vw, 2.6rem);
   margin-bottom: 0.2em;
 }
 
@@ -783,7 +818,9 @@ textarea:focus-visible,
 .hero__subtitle {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: clamp(1.575rem, 1.425rem + 0.75vw, 1.95rem);
+  font-size: clamp(1.37rem, 1.24rem + 0.65vw, 1.7rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   margin-bottom: 10px;
 }
 
@@ -826,9 +863,9 @@ textarea:focus-visible,
 .hero-card__title {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
 }
 
 .hero-card__text {
@@ -856,9 +893,10 @@ textarea:focus-visible,
 .hero-stat strong {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+  font-size: clamp(1.17rem, 1rem + 0.7vw, 1.53rem);
+  letter-spacing: -0.01em;
   color: var(--color-accent);
-  line-height: 1;
+  line-height: 1.15;
 }
 
 .hero-stat span {
@@ -918,7 +956,7 @@ textarea:focus-visible,
 
 .page-banner__content h1 {
   color: var(--color-white);
-  font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.3rem);
+  font-size: clamp(1.5rem, 1.25rem + 1.2vw, 2rem);
   margin-bottom: 0.2em;
 }
 
@@ -1576,7 +1614,9 @@ textarea:focus-visible,
 .footer-logo {
   color: var(--color-white);
   font-family: var(--font-heading);
-  font-size: 1.3rem;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
   margin-bottom: 10px;
   display: block;
@@ -1961,7 +2001,9 @@ textarea:focus-visible,
 .stat-row strong {
   display: block;
   font-family: var(--font-heading);
-  font-size: 1.6rem;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
   color: var(--color-link);
 }
 
