@@ -1,7 +1,5 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
-import heroStock from '../assets/brand/hero-stock.jpg';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
@@ -59,9 +57,23 @@ const steps = [
   description={`Ремонт квартир и офисов в Лысьве и Чусовом «под ключ»: электрика, натяжные потолки, сантехника, отделка. Договор, смета, гарантия. Звоните: ${site.phone.display}.`}
   path="/"
 >
+  <Fragment slot="head">
+    <link rel="preload" as="image" href={withBase('/images/hero-desktop.webp')} type="image/webp" media="(min-width: 769px)" />
+    <link rel="preload" as="image" href={withBase('/images/hero-mobile.webp')} type="image/webp" media="(max-width: 768px)" />
+  </Fragment>
   <section class="hero">
     <div class="hero__bg">
-      <Image src={heroStock} alt="Мастера компании Арт Лидер выполняют отделочные работы" width={1920} loading="eager" fetchpriority="high" />
+      <picture>
+        <source media="(max-width: 768px)" srcset={withBase('/images/hero-mobile.webp')} />
+        <img
+          src={withBase('/images/hero-desktop.webp')}
+          alt="Светлая гостиная в скандинавском стиле после ремонта"
+          width="1920"
+          height="1080"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </picture>
     </div>
     <div class="hero__overlay"></div>
     <div class="container">
