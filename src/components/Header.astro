@@ -85,18 +85,45 @@ import { withBase } from '../lib/url';
   const burger = document.getElementById('burger-toggle');
   const nav = document.getElementById('mobile-nav');
 
+  // overflow:hidden на body по-разному пересчитывает ширину страницы в разных
+  // мобильных браузерах (в части WebView на Android при этом пропадает и
+  // резервируется полоса прокрутки, из-за чего контент "прыгает" по
+  // горизонтали) — вместо этого фиксируем body на месте и компенсируем
+  // прокрутку через top, это работает предсказуемо везде.
+  let scrollY = 0;
+
+  function lockScroll() {
+    scrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+  }
+
+  function unlockScroll() {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    window.scrollTo(0, scrollY);
+  }
+
   burger?.addEventListener('click', () => {
     const isOpen = nav?.getAttribute('data-open') === 'true';
     nav?.setAttribute('data-open', String(!isOpen));
     burger.setAttribute('aria-expanded', String(!isOpen));
-    document.body.style.overflow = !isOpen ? 'hidden' : '';
+    if (isOpen) {
+      unlockScroll();
+    } else {
+      lockScroll();
+    }
   });
 
   nav?.querySelectorAll('a').forEach((a) => {
     a.addEventListener('click', () => {
       nav.setAttribute('data-open', 'false');
       burger?.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
+      unlockScroll();
     });
   });
 
