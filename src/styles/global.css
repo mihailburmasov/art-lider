@@ -69,6 +69,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -94,6 +95,7 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   padding-bottom: 0;
+  overflow-x: clip;
 }
 
 @media (max-width: 639px) {
@@ -313,6 +315,18 @@ section {
   padding: 10px 20px;
   min-height: 40px;
   font-size: 0.85rem;
+}
+
+/* На телефонах уже с логотипом + бургером (без кнопки) едва хватает места —
+   логотип-бейдж (228px) не сжимается (flex-shrink:0), и на ширинах 360–414px
+   (подавляющее большинство телефонов) кнопка "Оставить заявку" в шапке
+   выталкивает бургер за пределы экрана: он есть в DOM и кликабелен, но не
+   виден без ручного горизонтального скролла. Прячем кнопку в шапке ниже
+   500px — в раскрытом меню есть точно такая же кнопка на всю ширину. */
+@media (max-width: 499px) {
+  .header-actions .btn-sm {
+    display: none;
+  }
 }
 
 .btn-block {
