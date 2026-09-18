@@ -50,7 +50,6 @@
   --shadow: 0 4px 20px rgba(31, 35, 40, 0.08);
   --shadow-lg: 0 12px 40px rgba(31, 35, 40, 0.14);
   --header-height: 76px;
-  --mobile-bar-height: 60px;
 
   --transition: 0.2s ease;
 }
@@ -96,12 +95,6 @@ body {
   -webkit-font-smoothing: antialiased;
   padding-bottom: 0;
   overflow-x: clip;
-}
-
-@media (max-width: 639px) {
-  body.has-mobile-bar {
-    padding-bottom: var(--mobile-bar-height);
-  }
 }
 
 img,
@@ -1683,18 +1676,12 @@ textarea:focus-visible,
 .messenger-widget {
   position: fixed;
   right: 20px;
-  bottom: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
   z-index: 80;
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
-}
-
-@media (min-width: 640px) {
-  .messenger-widget {
-    display: flex;
-  }
 }
 
 .messenger-widget__panel {
@@ -1748,47 +1735,6 @@ textarea:focus-visible,
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* ===== Mobile bottom bar ===== */
-.mobile-bar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 85;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  background: var(--color-white);
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-@media (min-width: 640px) {
-  .mobile-bar {
-    display: none;
-  }
-}
-
-.mobile-bar a,
-.mobile-bar button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 10px 4px;
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--color-dark);
-  background: none;
-  border: none;
-  min-height: var(--mobile-bar-height);
-}
-
-.mobile-bar button[data-open-callback-modal] {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
 }
 
 /* ===== Modal ===== */

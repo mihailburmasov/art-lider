@@ -5,7 +5,6 @@ import JsonLd from '../components/JsonLd.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MessengerWidget from '../components/MessengerWidget.astro';
-import MobileBar from '../components/MobileBar.astro';
 import CallbackModal from '../components/CallbackModal.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import { site } from '../config/site';
@@ -31,7 +30,7 @@ const fullTitle = title.includes(site.companyName) ? title : `${title} — ре�
     <JsonLd data={localBusinessJsonLd()} />
     <slot name="head" />
   </head>
-  <body class="has-mobile-bar">
+  <body>
     <a class="skip-link" href="#main-content">Перейти к содержимому</a>
     <Header />
     <main id="main-content">
@@ -39,7 +38,6 @@ const fullTitle = title.includes(site.companyName) ? title : `${title} — ре�
     </main>
     <Footer />
     <MessengerWidget />
-    <MobileBar />
     <CallbackModal />
     <CookieBanner />
 
