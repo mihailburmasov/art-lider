@@ -1439,7 +1439,21 @@ textarea:focus-visible,
   margin: 0;
 }
 
-/* ===== Contact form ===== */
+/* ===== Contact form =====
+   У .contact-form нет собственных дочерних блоков с margin, поэтому весь
+   вертикальный ритм задаём через gap на самой форме — иначе отступы между
+   строками "плавают" в зависимости от того, есть ли у поля .field-error
+   (у select'ов и чекбокса его нет, у текстовых полей — есть). */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-form h3 {
+  margin: 0;
+}
+
 .form-grid {
   display: grid;
   gap: 16px;
@@ -1526,6 +1540,7 @@ textarea:focus-visible,
 }
 
 .form-status {
+  margin: 0;
   min-height: 1.4em;
   font-weight: 600;
   font-size: 0.92rem;
