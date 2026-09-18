@@ -7,8 +7,10 @@ import Icon from '../../components/Icon.astro';
 import { site } from '../../config/site';
 import bannerImg from '../../assets/banners/kontakty.jpg';
 
-const mapQuery = encodeURIComponent(site.address.full);
-const mapSrc = `https://yandex.ru/map-widget/v1/?text=${mapQuery}&z=16`;
+// Координаты офиса (ул. Федосеева, 37, Лысьва) — используются вместо текстового
+// поиска, чтобы на карте была явная метка компании, а не просто подсвеченный дом.
+const officeCoords = '57.8064186,58.1036506';
+const mapSrc = `https://yandex.ru/map-widget/v1/?ll=${officeCoords}&z=16&pt=${officeCoords},pm2rdl`;
 ---
 
 <BaseLayout

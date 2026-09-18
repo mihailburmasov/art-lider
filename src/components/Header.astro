@@ -8,45 +8,47 @@ import { withBase } from '../lib/url';
 ---
 
 <header class="site-header">
-  <div class="container site-header__bar">
-    <a href={withBase('/')} class="logo" aria-label={`${site.companyName} — на главную`}>
-      <Image src={logoMark} alt={`${site.legalBrand} — ${site.tagline}`} height={28} />
-    </a>
+  <div class="site-header__bar">
+    <div class="container site-header__inner">
+      <a href={withBase('/')} class="logo" aria-label={`${site.companyName} — на главную`}>
+        <Image src={logoMark} alt={`${site.legalBrand} — ${site.tagline}`} height={28} />
+      </a>
 
-    <nav class="main-nav" aria-label="Основная навигация">
-      <ul>
-        <li class="has-dropdown">
-          <button aria-haspopup="true" aria-expanded="false" type="button">
-            Услуги <Icon name="chevronDown" style="width:14px;height:14px" />
-          </button>
-          <ul class="dropdown">
-            {services.map((s) => (
-              <li><a href={withBase(`/uslugi/${s.slug}/`)}>{s.shortTitle}</a></li>
-            ))}
-            <li><a href={withBase('/uslugi/')}><strong>Все услуги</strong></a></li>
-          </ul>
-        </li>
-        <li><a href={withBase('/raboty/')}>Наши работы</a></li>
-        <li><a href={withBase('/ceny/')}>Цены</a></li>
-        <li><a href={withBase('/o-kompanii/')}>О компании</a></li>
-        <li><a href={withBase('/otzyvy/')}>Отзывы</a></li>
-        <li><a href={withBase('/kontakty/')}>Контакты</a></li>
-      </ul>
-    </nav>
+      <nav class="main-nav" aria-label="Основная навигация">
+        <ul>
+          <li class="has-dropdown">
+            <button aria-haspopup="true" aria-expanded="false" type="button">
+              Услуги <Icon name="chevronDown" style="width:14px;height:14px" />
+            </button>
+            <ul class="dropdown">
+              {services.map((s) => (
+                <li><a href={withBase(`/uslugi/${s.slug}/`)}>{s.shortTitle}</a></li>
+              ))}
+              <li><a href={withBase('/uslugi/')}><strong>Все услуги</strong></a></li>
+            </ul>
+          </li>
+          <li><a href={withBase('/raboty/')}>Наши работы</a></li>
+          <li><a href={withBase('/ceny/')}>Цены</a></li>
+          <li><a href={withBase('/o-kompanii/')}>О компании</a></li>
+          <li><a href={withBase('/otzyvy/')}>Отзывы</a></li>
+          <li><a href={withBase('/kontakty/')}>Контакты</a></li>
+        </ul>
+      </nav>
 
-    <div class="header-actions">
-      <a class="header-phone" href={site.phone.href}>{site.phone.display}</a>
-      <button type="button" class="btn btn-primary btn-sm" data-open-callback-modal>Оставить заявку</button>
-      <button
-        class="burger"
-        type="button"
-        aria-expanded="false"
-        aria-controls="mobile-nav"
-        aria-label="Открыть меню"
-        id="burger-toggle"
-      >
-        <span></span><span></span><span></span>
-      </button>
+      <div class="header-actions">
+        <a class="header-phone" href={site.phone.href}>{site.phone.display}</a>
+        <button type="button" class="btn btn-primary btn-sm" data-open-callback-modal>Оставить заявку</button>
+        <button
+          class="burger"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+          aria-label="Открыть меню"
+          id="burger-toggle"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </div>
 
